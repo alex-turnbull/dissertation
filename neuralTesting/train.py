@@ -53,7 +53,7 @@ def train(X, y, n_hidden, learning_rate, n_iter):
     modelOut = {'weight1': weight1, 'b1': b1, 'weight2': weight2, 'b2': b2}
     #print(modelOut)
     if output == "y":
-        np.save('TrainedModel2.npy', modelOut)
+        np.save('TrainedModel5.npy', modelOut)
         #f = open("TrainedModel.txt", "w")
         #f.writelines(str(modelOut))
         #f.close()
