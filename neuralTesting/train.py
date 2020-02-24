@@ -95,8 +95,8 @@ y = np.array(y, dtype=float)
 
 print(X)
 
-n_hidden = 20
-learning_rate = 0.1
+n_hidden = 3
+learning_rate = 0.05
 n_iter = int(sys.argv[2])
 
 start_time = time.time()
