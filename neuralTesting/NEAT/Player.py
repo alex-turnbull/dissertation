@@ -1,5 +1,9 @@
 import NEAT.Genome as Genome
 
+# I think I've somehow got to create a connection between this
+# and an entity in unity :think:
+# YIKES
+
 class Player:
     fitness = None
     brain = None

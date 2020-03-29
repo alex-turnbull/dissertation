@@ -20,12 +20,15 @@ def predict(x, model):
     A3 = np.matmul(A2, W2) + b2
     return A3
 
-#modelDir = "TrainedModel.npy"
-#modelDir = sys.argv[1]
-#model = np.load(modelDir)
-#X = []
-#X.append([0.9845487, 270.8687, 1.0, 0.0, 2.940531, 0.5767461, 0.5667362, 5.482859, 0.6581876, 0.646764])
-#X = np.array(X, dtype=float)
-#print(X)
-#print(model)
-#print("Prediction: ",predict(X, model))
+
+"""
+# modelDir = "TrainedModel.npy"
+# modelDir = sys.argv[1]
+# model = np.load(modelDir)
+# X = []
+# X.append([0.9845487, 270.8687, 1.0, 0.0, 2.940531, 0.5767461, 0.5667362, 5.482859, 0.6581876, 0.646764])
+# X = np.array(X, dtype=float)
+# print(X)
+# print(model)
+# print("Prediction: ",predict(X, model))
+"""
