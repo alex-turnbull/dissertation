@@ -5,7 +5,8 @@ import sys
 import csv
 import json as js
 import time
-from datetime import timedelta
+import datetime
+import argparse
 
 
 def sigmoid(z):
@@ -19,7 +20,7 @@ def sigmoid_derivative(z):
 def timer(start,end):
     hours, rem = divmod(end-start, 3600)
     minutes, seconds = divmod(rem, 60)
-    print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds))
+    print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
 
 
 def train(X, y, n_hidden, learning_rate, n_iter):
@@ -51,20 +52,35 @@ def train(X, y, n_hidden, learning_rate, n_iter):
             print('Iteration %i, training loss: %f, Accuracy: %f' % (i, cost, (100-(cost*100))))
     np.set_printoptions(threshold=sys.maxsize)
     modelOut = {'weight1': weight1, 'b1': b1, 'weight2': weight2, 'b2': b2}
-    #print(modelOut)
+    # print(modelOut)
     if output == "y":
-        np.save('TrainedModel5.npy', modelOut)
-        #f = open("TrainedModel.txt", "w")
-        #f.writelines(str(modelOut))
-        #f.close()
+        if len(args.output_file) >= 1:
+            finalOutputFile = args.output_file
+        else:
+            finalOutputFile = 'output' + datetime.datetime.now().strftime("%d-%m-%Y %H.%M.%S")
+
+        np.save(finalOutputFile + '.npy', modelOut)
+        # f = open("TrainedModel.txt", "w")
+        # f.writelines(str(modelOut))
+        # f.close()
     elapsed_time = time.time() - start_time
-    print("Runtime: ", str(timedelta(seconds=elapsed_time)))
+    print("Runtime: ", str(datetime.timedelta(seconds=elapsed_time)))
     return modelOut
+
+
+parser = argparse.ArgumentParser(description='trains and outputs a neural network given training data')
+parser.add_argument('--training_data', type=str, default='TrainingData5.csv', help='csv file containing training data')
+parser.add_argument('--iteration_count', type=int, default=10000, help='number of training cycles')
+parser.add_argument('--output_file', type=str, default='', help='the name of the output file')
+parser.add_argument('--hidden_layers', type=int, default=20, help='number of hidden layers to train on')
+parser.add_argument('--learning_rate', type=float, default=0.1, help='learning rate')
+
+args = parser.parse_args()
 
 X = []
 y = []
 
-dir = str(sys.argv[1])
+dir = args.training_data
 
 with open(dir) as csvfile:
     readCSV = csv.reader(csvfile, delimiter=';')
@@ -87,22 +103,23 @@ with open(dir) as csvfile:
         else:
             row[13] = 0
         y.append([row[10], row[11], row[12], row[13]])
-        #print(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
-        #print(row[10], row[11], row[12], row[13])
+        # print(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
+        # print(row[10], row[11], row[12], row[13])
 
 X = np.array(X, dtype=float)
 y = np.array(y, dtype=float)
 
 print(X)
 
-n_hidden = 20
-learning_rate = 0.1
-n_iter = int(sys.argv[2])
+n_hidden = args.hidden_layers
+learning_rate = args.learning_rate
+n_iter = args.iteration_count
 
 start_time = time.time()
 
 output = input("Output TrainedModel? (y/n) ")
 model = train(X, y, n_hidden, learning_rate, n_iter)
+
 
 def predict(x, model):
     W1 = model['weight1']
@@ -113,6 +130,6 @@ def predict(x, model):
     A3 = np.matmul(A2, W2) + b2
     return A3
 
-x =[]
-x.append([0.9845487, 270.8687, 1.0, 0.0, 2.940531, 0.5767461, 0.5667362, 5.482859, 0.6581876, 0.646764])
+
+x = [[0.9845487, 270.8687, 1.0, 0.0, 2.940531, 0.5767461, 0.5667362, 5.482859, 0.6581876, 0.646764]]
 x = np.array(x, dtype=float)

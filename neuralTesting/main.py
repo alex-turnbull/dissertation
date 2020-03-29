@@ -1,4 +1,5 @@
 import numpy as np
+import argparse
 
 #X = np.array(([0, 0, 1], [0, 1, 1], [1, 0, 1], [1, 1, 1]), dtype=float)
 #y = np.array(([0], [1], [1], [1]), dtype=float)

@@ -2,12 +2,17 @@ import NEAT.Node as Node
 import random
 import numpy
 
+fromNode = None
+toNode = None
+weight = None
+enabled = True
+innovationNo = None
+
 class connectionGene:
     def __init__(self, fromN, to, w, inno):
         self.fromNode = fromN
         self.toNode = to
         self.weight = w
-        self.enabled = True
         self.innovationNo = inno
 
     def mutateWeight(self):
