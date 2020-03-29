@@ -4,6 +4,9 @@ import NEAT.Genome as Genome
 # and an entity in unity :think:
 # YIKES
 
+# Maybe this can store some sort of reference ID, and then can poll unity for
+# it's respective reference for the values
+
 class Player:
     fitness = None
     brain = None

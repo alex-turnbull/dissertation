@@ -29,5 +29,8 @@ def setup():
 
     # Run the server and send some sort of command to call a setup function in Unity??
 
+    # Server might have to be jacked up to receive EVERY car, unless there's
+    # a different server for each car :think:
+
     pop = Population.Population(500)
     humanPlayer = Player.Player()
