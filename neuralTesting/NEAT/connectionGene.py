@@ -1,5 +1,5 @@
-import NEAT.Node as Node
 import random
+
 import numpy
 
 fromNode = None

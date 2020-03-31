@@ -1,4 +1,4 @@
-import NEAT.Genome as Genome
+import Genome as Genome
 
 # I think I've somehow got to create a connection between this
 # and an entity in unity :think:

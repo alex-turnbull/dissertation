@@ -1,7 +1,9 @@
-import NEAT.Player as Player
-import NEAT.NeatCore as neatCore
-import NEAT.Species as Species
 import math
+
+import NeatCore as neatCore
+import Player as dd
+import Species as Species
+
 
 class Population:
     pop = []
@@ -17,7 +19,7 @@ class Population:
 
     def __init__(self, size):
         for i in range(0, size):
-            self.pop.append(Player.Player())
+            self.pop.append(dd.Player())
             self.pop[i].brain.generateNetwork()
             self.pop[i].brain.mutate(self.innovationHistory)
 

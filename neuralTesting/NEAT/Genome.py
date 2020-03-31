@@ -2,12 +2,14 @@
 
 """
 
-import NEAT.Node as Node
-import NEAT.connectionGene as connectionGene
-import NEAT.NeatCore as neatCore
-import NEAT.connectionHistory as connectionHistory
 import math
 import random
+
+import NeatCore as neatCore
+import Node as Node
+import connectionGene as connectionGene
+import connectionHistory as connectionHistory
+
 
 class Genome:
     genes = []
