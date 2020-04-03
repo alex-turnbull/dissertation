@@ -10,12 +10,12 @@ class connectionHistory:
         self.fromNode = fromNode
         self.toNode = to
         self.innovationNumber = inno
-        self.innovationNumbers = list(innovationNos.clone())
+        self.innovationNumbers = innovationNos
 
     def matches(self, genome, fromN, to):
-        if genome.genes.count() == len(self.innovationNumbers):
+        if len(genome.genes) == len(self.innovationNumbers):
             if fromN.number == self.fromNode and to.number == self.toNode:
-                for i in range(0, genome.genes.count()):
+                for i in range(0, len(genome.genes)):
                     if not self.innovationNumbers.__contains__(genome.genes.get(i).innovationNo):
                         return False
 

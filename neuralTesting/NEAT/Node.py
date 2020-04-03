@@ -20,7 +20,7 @@ class Node:
 
         for i in range(0, len(self.outputConnections)):
             if self.outputConnections[i].enabled:
-                self.outputConnections[i].toNode.inputSum += self.outputConnections[i].weight * self.outputValue
+                self.outputConnections[i].toNode.inputSum += self.outputConnections[i].weight * float(self.outputValue)
 
     def isConnectedTo(self, node):
         if node.layer == self.layer:

@@ -8,6 +8,10 @@ using WindowsInput;
 
 public class CarMove : MonoBehaviour
 {
+    [Header("Probably less than ideal")]
+    public string port;
+
+    [Header("General")]
     public float acceleration;
     public float steering;
     private Rigidbody2D rb;
@@ -39,6 +43,8 @@ public class CarMove : MonoBehaviour
     public bool s;
     public bool a;
     public bool d;
+    float h;
+    float v;
 
     Gradient g = new Gradient();
 
@@ -80,8 +86,8 @@ public class CarMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        float h = -Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        //h = -Input.GetAxis("Horizontal");
+        //v = Input.GetAxis("Vertical");
 
         speeds = transform.up * (v * acceleration);
         rb.AddForce(speeds);
@@ -158,12 +164,12 @@ public class CarMove : MonoBehaviour
         //if (hit.collider != null)
         //{
         //    Debug.DrawLine(transform.position, hit.point, Color.white);
-        //}   
+        //}
 
-        w = Input.GetKey(KeyCode.W) ? true : false;
-        s = Input.GetKey(KeyCode.S) ? true : false;
-        a = Input.GetKey(KeyCode.A) ? true : false;
-        d = Input.GetKey(KeyCode.D) ? true : false;
+        //w = Input.GetKey(KeyCode.W) ? true : false;
+        //s = Input.GetKey(KeyCode.S) ? true : false;
+        //a = Input.GetKey(KeyCode.A) ? true : false;
+        //d = Input.GetKey(KeyCode.D) ? true : false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -181,9 +187,9 @@ public class CarMove : MonoBehaviour
 
     void FellOffTrack()
     {
-        transform.position = spawnPos;
-        transform.localRotation = spawnRot;
-        rb.velocity = Vector2.zero;
+        //transform.position = spawnPos;
+        //transform.localRotation = spawnRot;
+        //rb.velocity = Vector2.zero;
     }
 
     void CheckpointHit()
@@ -260,39 +266,52 @@ public class CarMove : MonoBehaviour
 
         if(float.Parse(inputs[0]) > activationThreshold)
         {
-            sim.Keyboard.KeyDown(VirtualKeyCode.VK_W);
+            //sim.Keyboard.KeyDown(VirtualKeyCode.VK_W);
+            v = 1;
+            w = true;
         }
         else
         {
-            sim.Keyboard.KeyUp(VirtualKeyCode.VK_W);
-        }
+            //sim.Keyboard.KeyUp(VirtualKeyCode.VK_W);
+            if (float.Parse(inputs[1]) > activationThreshold)
+            {
+                //sim.Keyboard.KeyDown(VirtualKeyCode.VK_A);
+                h = 1;
+                a = true;
 
-        if (float.Parse(inputs[1]) > activationThreshold)
-        {
-            sim.Keyboard.KeyDown(VirtualKeyCode.VK_A);
-        }
-        else
-        {
-            sim.Keyboard.KeyUp(VirtualKeyCode.VK_A);
+            }
+            else
+            {
+                //sim.Keyboard.KeyUp(VirtualKeyCode.VK_A);
+                h = 0;
+                a = false;
+            }
         }
 
         if (float.Parse(inputs[2]) > activationThreshold)
         {
-            sim.Keyboard.KeyDown(VirtualKeyCode.VK_S);
+            //sim.Keyboard.KeyDown(VirtualKeyCode.VK_S);
+            v = -1;
+            s = true;
         }
         else
         {
-            sim.Keyboard.KeyUp(VirtualKeyCode.VK_S);
+            //sim.Keyboard.KeyUp(VirtualKeyCode.VK_S);
+            if (float.Parse(inputs[3]) > activationThreshold)
+            {
+                //sim.Keyboard.KeyDown(VirtualKeyCode.VK_D);
+                h = -1;
+                d = true;
+            }
+            else
+            {
+                //sim.Keyboard.KeyUp(VirtualKeyCode.VK_D);
+                h = 0;
+                d = false;
+            }
         }
 
-        if (float.Parse(inputs[3]) > activationThreshold)
-        {
-            sim.Keyboard.KeyDown(VirtualKeyCode.VK_D);
-        }
-        else
-        {
-            sim.Keyboard.KeyUp(VirtualKeyCode.VK_D);
-        }
+        
 
     }
 }

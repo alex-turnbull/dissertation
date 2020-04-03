@@ -1,7 +1,7 @@
 import math
 
-import NeatCore as neatCore
-import Player as dd
+import tempGlobals as globals
+import Player as Player
 import Species as Species
 
 
@@ -19,7 +19,7 @@ class Population:
 
     def __init__(self, size):
         for i in range(0, size):
-            self.pop.append(dd.Player())
+            self.pop.append(Player.Player())
             self.pop[i].brain.generateNetwork()
             self.pop[i].brain.mutate(self.innovationHistory)
 
@@ -29,7 +29,7 @@ class Population:
                 self.pop[i].look()
                 self.pop[i].think()
                 self.pop[i].update()
-                if not neatCore.showNothing and (not neatCore.showBest or i == 0):
+                if not globals.showNothing and (not globals.showBest or i == 0):
                     self.pop[i].show()
 
 

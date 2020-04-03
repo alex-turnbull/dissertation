@@ -8,6 +8,7 @@ public class HelloClient : MonoBehaviour
     {
         _helloRequester = new HelloRequester();
         _helloRequester.carRef = gameObject.GetComponent<CarMove>();
+        _helloRequester.port = gameObject.GetComponent<CarMove>().port;
         _helloRequester.Start();        
     }
 

@@ -1,4 +1,6 @@
 import Genome as Genome
+import server as server
+import tempGlobals as Globals
 
 # I think I've somehow got to create a connection between this
 # and an entity in unity :think:
@@ -10,20 +12,26 @@ import Genome as Genome
 class Player:
     fitness = None
     brain = None
-    vision = [None]*8  # ALL inputs from Unity
-    decision = [None]*4  # Output buttons
+
+    vision = [0] * 6  # ALL inputs from Unity
+    decision = [0] * 4  # Output buttons
     unadjustedFitness = None
     lifespan = 0
-    bestscore = 0
-    dead = None
+    dead = False
     score = None
     gen = 0
 
-    genomeInputs = 13
+    genomeInputs = 6
     genomeOutputs = 4
 
+    server = None
+    port = None
+
     def __init__(self):
-        brain = Genome.Genome(self.genomeInputs, self.genomeOutputs)
+        self.brain = Genome.Genome(self.genomeInputs, self.genomeOutputs)
+        self.port = str(Globals.currentPort)
+        Globals.currentPort += 1
+        self.server = server.carServer(self.port)
 
     def show(self):
         pass
@@ -38,7 +46,8 @@ class Player:
 
     def look(self):
         # UNITY?!?????????
-        pass
+        data = self.server.getData()
+        self.vision = data
 
     def think(self):
         max = 0
@@ -49,6 +58,9 @@ class Player:
             if decision[i] > max:
                 max = decision[i]
                 maxIndex = i
+
+        self.server.sendData(decision)
+
 
     def clone(self):
         clone = Player()

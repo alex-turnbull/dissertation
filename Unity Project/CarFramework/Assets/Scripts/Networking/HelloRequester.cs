@@ -11,6 +11,7 @@ using UnityEngine;
 public class HelloRequester : RunAbleThread
 {
     public CarMove carRef;
+    public string port;
     /// <summary>
     ///     Request Hello message to server and receive message back. Do it 10 times.
     ///     Stop requesting when Running=false.
@@ -20,7 +21,9 @@ public class HelloRequester : RunAbleThread
         ForceDotNet.Force(); // this line is needed to prevent unity freeze after one use, not sure why yet
         using (RequestSocket client = new RequestSocket())
         {
-            client.Connect("tcp://localhost:5555");
+            string connector = "tcp://localhost:";
+            connector += port;
+            client.Connect(connector);
 
             while (Running)
             {

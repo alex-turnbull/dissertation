@@ -5,7 +5,7 @@
 import math
 import random
 
-import NeatCore as neatCore
+import tempGlobals as globals
 import Node as Node
 import connectionGene as connectionGene
 import connectionHistory as connectionHistory
@@ -68,7 +68,7 @@ class Genome:
         for i in range(0, len(self.network)):
             self.network[i].engage()
 
-        outs = [self.outputs]
+        outs = [0] * self.outputs
         for i in range(0, self.outputs):
             outs[i] = self.nodes[self.inputs + i].outputValue
 
@@ -91,10 +91,10 @@ class Genome:
             self.addConnection(innovationHistory)
             return
 
-        randomConnection = math.floor(random.random(len(self.genes)))
+        randomConnection = math.floor(random.uniform(0, len(self.genes)))
 
         while self.genes[randomConnection].fromNode == self.nodes[self.biasnode] and len(self.genes) != 1:
-            randomConnection = math.floor(random.random(len(self.genes)))
+            randomConnection = math.floor(random.uniform(0, len(self.genes)))
 
         self.genes[randomConnection].enabled = False
 
@@ -129,11 +129,11 @@ class Genome:
             print("connetion failed lmao")
             return
 
-        randomNode1 = math.floor(random.random(len(self.nodes)))
-        randomNode2 = math.floor(random.random(len(self.nodes)))
+        randomNode1 = math.floor(random.uniform(0, len(self.nodes)))
+        randomNode2 = math.floor(random.uniform(0, len(self.nodes)))
         while self.randomConnectionNodesAreShit(randomNode1, randomNode2):
-            randomNode1 = math.floor(random.random(len(self.nodes)))
-            randomNode2 = math.floor(random.random(len(self.nodes)))
+            randomNode1 = math.floor(random.uniform(0, len(self.nodes)))
+            randomNode2 = math.floor(random.uniform(0, len(self.nodes)))
 
         if self.nodes[randomNode1].layer > self.nodes[randomNode2].layer:
             temp = randomNode2
@@ -142,7 +142,7 @@ class Genome:
 
         connectionInnovationNumber = self.getInnovationNumber(innovationHistory, self.nodes[randomNode1], self.nodes[randomNode2])
 
-        self.genes.append(connectionGene.connectionGene(self.nodes[randomNode1], self.nodes[randomNode2], random.random(-1, 1), connectionInnovationNumber))
+        self.genes.append(connectionGene.connectionGene(self.nodes[randomNode1], self.nodes[randomNode2], random.uniform(-1, 1), connectionInnovationNumber))
         self.connectNodes()
 
     def randomConnectionNodesAreShit(self, r1, r2):
@@ -155,7 +155,7 @@ class Genome:
 
     def getInnovationNumber(self, innovationHistory, nodeFrom, nodeTo):
         isNew = True
-        connectionInnovationNumber = neatCore.nextConnectionNo
+        connectionInnovationNumber = globals.nextConnectionNo
 
         for i in range(0, len(innovationHistory)):
             if innovationHistory[i].matches(self, nodeFrom, nodeTo):
@@ -169,13 +169,13 @@ class Genome:
                 innoNumbers.append(self.genes[i].innovationNo)
 
             innovationHistory.append(connectionHistory.connectionHistory(nodeFrom.number, nodeTo.number, connectionInnovationNumber, innoNumbers))
-            neatCore.nextConnectionNo += 1
+            globals.nextConnectionNo += 1
 
         return connectionInnovationNumber
 
     def fullyConnected(self):
         maxConnections = 0
-        nodesInLayers = [self.layers]
+        nodesInLayers = [0] * self.layers
 
         for i in range(0, len(self.nodes)):
             nodesInLayers[self.nodes[i].layer] += 1
@@ -195,16 +195,16 @@ class Genome:
         if len(self.genes) == 0:
             self.addConnection(innovationHistory)
 
-        rand1 = random.random(1)
+        rand1 = random.uniform(0, 1)
         if rand1 < 0.8:
             for i in range(len(self.genes)):
                 self.genes[i].mutateWeight()
 
-        rand2 = random.random(1)
+        rand2 = random.uniform(0, 1)
         if rand2 < 0.08:
             self.addConnection(innovationHistory)
 
-        rand3 = random.random(1)
+        rand3 = random.uniform(0, 1)
         if rand3 < 0.02:
             self.addNode(innovationHistory)
 
@@ -224,9 +224,9 @@ class Genome:
             parent2Gene = self.matchingGene(parent2, self.genes[i].innovationNo)
             if parent2Gene != -1:
                 if not self.genes[i].enabled or not parent2.genes[parent2Gene].enabled:
-                    if random.random(1) < 0.75:
+                    if random.uniform(0, 1) < 0.75:
                         setEnabled = False
-                rand = random.random(1)
+                rand = random.uniform(0, 1)
                 if rand <= 0.5:
                     childGenes.append(self.genes[i])
                 else:

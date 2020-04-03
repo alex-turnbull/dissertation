@@ -2,13 +2,13 @@ import random
 
 import numpy
 
-fromNode = None
-toNode = None
-weight = None
-enabled = True
-innovationNo = None
-
 class connectionGene:
+    fromNode = None
+    toNode = None
+    weight = None
+    enabled = True
+    innovationNo = None
+
     def __init__(self, fromN, to, w, inno):
         self.fromNode = fromN
         self.toNode = to
@@ -16,9 +16,9 @@ class connectionGene:
         self.innovationNo = inno
 
     def mutateWeight(self):
-        rand2 = random.randrange(0, 1)
+        rand2 = random.uniform(0, 1)
         if rand2 < 0.1:
-            self.weight = random.randrange(-1, 1)
+            self.weight = random.uniform(-1, 1)
         else:
             self.weight += numpy.random.normal()/50
             if self.weight > 1:

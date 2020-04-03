@@ -1,28 +1,7 @@
 import Population as Population
 import Player as Player
 import argparse
-
-nextConnectionNo = 1000
-pop = None
-speed = 60
-
-showBest = True
-runBest = False
-humanPlaying = False
-
-humanPlayer = None
-
-runThroughSpecies = False
-upToSpecies = 0
-speciesChamp = False
-
-showBrain = False
-
-showBestEachGen = False
-upToGen = 0
-genPlayerTemp = None
-
-showNothing = False
+import time
 
 
 def setup(population):
@@ -34,12 +13,20 @@ def setup(population):
     # Server might have to be jacked up to receive EVERY car, unless there's
     # a different server for each car :think:
 
+    print("About to start training with population size of", population)
+    time.sleep(2)
+
     pop = Population.Population(population)
-    humanPlayer = Player.Player()
+    # humanPlayer = Player.Player()
+    while True:
+        tick(pop)
+
+def tick(pop):
+    pop.updateAlive()
 
 
 parser = argparse.ArgumentParser(description='The main shit')
-parser.add_argument('--population_size', type=int, default='100', help='Number of agents to generate')
+parser.add_argument('--population_size', type=int, default='10', help='Number of agents to generate')
 
 args = parser.parse_args()
 
