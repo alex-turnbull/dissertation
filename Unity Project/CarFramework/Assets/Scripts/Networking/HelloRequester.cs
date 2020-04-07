@@ -12,6 +12,8 @@ public class HelloRequester : RunAbleThread
 {
     public CarMove carRef;
     public string port;
+
+    public bool sendDeathMsg;
     /// <summary>
     ///     Request Hello message to server and receive message back. Do it 10 times.
     ///     Stop requesting when Running=false.
@@ -27,25 +29,26 @@ public class HelloRequester : RunAbleThread
 
             while (Running)
             {
-                client.SendFrame(carRef.OutputData());
-                // ReceiveFrameString() blocks the thread until you receive the string, but TryReceiveFrameString()
-                // do not block the thread, you can try commenting one and see what the other does, try to reason why
-                // unity freezes when you use ReceiveFrameString() and play and stop the scene without running the server
-                //                string message = client.ReceiveFrameString();
-                //                Debug.Log("Received: " + message);
-                string message = null;
-                bool gotMessage = false;
-                while (Running)
-                {
-                    gotMessage = client.TryReceiveFrameString(out message); // this returns true if it's successful
-                    if (gotMessage) break;
-                }
+                    client.SendFrame(carRef.OutputData());
+                    // ReceiveFrameString() blocks the thread until you receive the string, but TryReceiveFrameString()
+                    // do not block the thread, you can try commenting one and see what the other does, try to reason why
+                    // unity freezes when you use ReceiveFrameString() and play and stop the scene without running the server
+                    //                string message = client.ReceiveFrameString();
+                    //                Debug.Log("Received: " + message);
+                    string message = null;
+                    bool gotMessage = false;
+                    while (Running)
+                    {
+                        gotMessage = client.TryReceiveFrameString(out message); // this returns true if it's successful
+                        if (gotMessage) break;
+                    }
 
-                if (gotMessage)
-                {
-                    Debug.Log("Received " + message);
-                    carRef.handleMessage(message);
-                }
+                    if (gotMessage)
+                    {
+                        Debug.Log("Received " + message);
+                        carRef.handleMessage(message);
+                    }
+                
             }
         }
 

@@ -33,6 +33,8 @@ public class CarMove : MonoBehaviour
     public string outputFile;
     Vector2 speeds;
 
+    public float fitness;
+    public float timeAlive;
     [Header("Output Values")]
     public float speed;
     public float angle;
@@ -46,9 +48,18 @@ public class CarMove : MonoBehaviour
     float h;
     float v;
 
+    public bool alive = true;
+    public bool manualControl = false;
+
     Gradient g = new Gradient();
 
     InputSimulator sim = new InputSimulator();
+
+    SpriteRenderer rend;
+
+    public bool sendDeathMsg;
+
+
 
     void Start()
     {
@@ -82,94 +93,111 @@ public class CarMove : MonoBehaviour
         if(outputValues)
             InvokeRepeating("SaveOutput", .5f, 0.1f);
         //POLL DATA AND SEND TO SERVER HERE ^^
+
+        rend = GetComponent<SpriteRenderer>();
     }
 
     void FixedUpdate()
     {
-        //h = -Input.GetAxis("Horizontal");
-        //v = Input.GetAxis("Vertical");
-
-        speeds = transform.up * (v * acceleration);
-        rb.AddForce(speeds);
-
-        float direction = Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.up));
-        if (direction >= 0.0f)
+        if (alive)
         {
-            rb.rotation += h * steering * (rb.velocity.magnitude / 5.0f);
-            //rb.AddTorque((h * steering) * (rb.velocity.magnitude / 10.0f));
-        }
-        else
-        {
-            rb.rotation -= h * steering * (rb.velocity.magnitude / 5.0f);
-            //rb.AddTorque((-h * steering) * (rb.velocity.magnitude / 10.0f));
-        }
+            speeds = transform.up * (v * acceleration);
+            rb.AddForce(speeds);
 
-        Vector2 forward = new Vector2(0.0f, 0.5f);
-        float steeringRightAngle;
-        if (rb.angularVelocity > 0)
-        {
-            steeringRightAngle = -90;
-        }
-        else
-        {
-            steeringRightAngle = 90;
-        }
-
-        Vector2 rightAngleFromForward = Quaternion.AngleAxis(steeringRightAngle, Vector3.forward) * forward;
-        //Debug.DrawLine((Vector3)rb.position, (Vector3)rb.GetRelativePoint(rightAngleFromForward), Color.green);
-
-        float driftForce = Vector2.Dot(rb.velocity, rb.GetRelativeVector(rightAngleFromForward.normalized));
-   
-        Vector2 relativeForce = (rightAngleFromForward.normalized * -1.0f) * (driftForce * 10.0f);
-
-
-        //Debug.DrawLine((Vector3)rb.position, (Vector3)rb.GetRelativePoint(relativeForce), Color.red);
-
-        rb.AddForce(rb.GetRelativeVector(relativeForce));
-
-        speed = rb.velocity.magnitude;
-        angle = transform.rotation.eulerAngles.z;
-        curSteering = h;
-        curAcceleration = v;       
-    }
-
-    private void Update()
-    {
-        RaycastHit2D hit;
-
-        var thetaAngle = 360 / (sensors);
-        var startAngle = 360;
-
-        var change = 1f / (sensors - 1);
-        float start = 1f;
-
-        for (int i = 0; i < sensors; i++)
-        {
-            hit = Physics2D.Raycast(transform.position, Quaternion.AngleAxis(startAngle, new Vector3(0, 0, 1)) * transform.up, checkDist, layerMask);
-            distances[i] = hit.distance;
-            if(hit.collider != null)
+            float direction = Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.up));
+            if (direction >= 0.0f)
             {
-                Debug.DrawLine(transform.position, hit.point, g.Evaluate(start));
+                rb.rotation += h * steering * (rb.velocity.magnitude / 5.0f);
+                //rb.AddTorque((h * steering) * (rb.velocity.magnitude / 10.0f));
             }
             else
             {
-                Debug.DrawRay(transform.position, Quaternion.AngleAxis(startAngle, new Vector3(0, 0, 1)) * transform.up * checkDist, g.Evaluate(start));
+                rb.rotation -= h * steering * (rb.velocity.magnitude / 5.0f);
+                //rb.AddTorque((-h * steering) * (rb.velocity.magnitude / 10.0f));
             }
-            startAngle -= thetaAngle;
-            start -= change;
+
+            Vector2 forward = new Vector2(0.0f, 0.5f);
+            float steeringRightAngle;
+            if (rb.angularVelocity > 0)
+            {
+                steeringRightAngle = -90;
+            }
+            else
+            {
+                steeringRightAngle = 90;
+            }
+
+            Vector2 rightAngleFromForward = Quaternion.AngleAxis(steeringRightAngle, Vector3.forward) * forward;
+            //Debug.DrawLine((Vector3)rb.position, (Vector3)rb.GetRelativePoint(rightAngleFromForward), Color.green);
+
+            float driftForce = Vector2.Dot(rb.velocity, rb.GetRelativeVector(rightAngleFromForward.normalized));
+
+            Vector2 relativeForce = (rightAngleFromForward.normalized * -1.0f) * (driftForce * 10.0f);
+
+
+            //Debug.DrawLine((Vector3)rb.position, (Vector3)rb.GetRelativePoint(relativeForce), Color.red);
+
+            rb.AddForce(rb.GetRelativeVector(relativeForce));
+
+            speed = rb.velocity.magnitude;
+            angle = transform.rotation.eulerAngles.z;
+            curSteering = h;
+            curAcceleration = v;
         }
-        //Debug.DrawRay(transform.position, transform.up, Color.red);
 
-        // If it hits something...
-        //if (hit.collider != null)
-        //{
-        //    Debug.DrawLine(transform.position, hit.point, Color.white);
-        //}
+        if (manualControl)
+        {
+            h = -Input.GetAxis("Horizontal");
+            v = Input.GetAxis("Vertical");
+        }
+    }
 
-        //w = Input.GetKey(KeyCode.W) ? true : false;
-        //s = Input.GetKey(KeyCode.S) ? true : false;
-        //a = Input.GetKey(KeyCode.A) ? true : false;
-        //d = Input.GetKey(KeyCode.D) ? true : false;
+    private void Update()
+    {        
+        if (alive)
+        {
+            fitness += (Time.deltaTime * 0.1f);
+            timeAlive += Time.deltaTime;
+            if (timeAlive > 20 && !(fitness > 15))
+                handleDeath();
+
+            RaycastHit2D hit;
+
+            var thetaAngle = 360 / (sensors);
+            var startAngle = 360;
+
+            var change = 1f / (sensors - 1);
+            float start = 1f;
+
+            for (int i = 0; i < sensors; i++)
+            {
+                hit = Physics2D.Raycast(transform.position, Quaternion.AngleAxis(startAngle, new Vector3(0, 0, 1)) * transform.up, checkDist, layerMask);
+                distances[i] = hit.distance;
+                if (hit.collider != null)
+                {
+                    Debug.DrawLine(transform.position, hit.point, g.Evaluate(start));
+                }
+                else
+                {
+                    Debug.DrawRay(transform.position, Quaternion.AngleAxis(startAngle, new Vector3(0, 0, 1)) * transform.up * checkDist, g.Evaluate(start));
+                }
+                startAngle -= thetaAngle;
+                start -= change;
+            }
+            //Debug.DrawRay(transform.position, transform.up, Color.red);
+
+            // If it hits something...
+            //if (hit.collider != null)
+            //{
+            //    Debug.DrawLine(transform.position, hit.point, Color.white);
+            //}
+
+            //w = Input.GetKey(KeyCode.W) ? true : false;
+            //s = Input.GetKey(KeyCode.S) ? true : false;
+            //a = Input.GetKey(KeyCode.A) ? true : false;
+            //d = Input.GetKey(KeyCode.D) ? true : false;
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -187,14 +215,13 @@ public class CarMove : MonoBehaviour
 
     void FellOffTrack()
     {
-        //transform.position = spawnPos;
-        //transform.localRotation = spawnRot;
-        //rb.velocity = Vector2.zero;
+        handleDeath();        
     }
 
     void CheckpointHit()
     {
         print("Hit Checkpoint");
+        fitness += 15;
     }
 
     public void SaveOutput()
@@ -242,13 +269,16 @@ public class CarMove : MonoBehaviour
         format.Sensor4 = distances[3];
         format.Sensor5 = distances[4];
         format.Sensor6 = distances[5];
+        format.Alive = alive.ToString();
+        format.CurrentFitness = fitness;
 
         //format.W = w;
         //format.S = s;
         //format.A = a;
         //format.D = d;
 
-        string formatted = $"{format.Speed};{format.Angle};{format.Steering};{format.Acceleration};{format.Sensor1};{format.Sensor2};{format.Sensor3};{format.Sensor4};{format.Sensor5};{format.Sensor6}";
+        string formatted = $"-a;{format.Speed};{format.Angle};{format.Steering};{format.Acceleration};{format.Sensor1};{format.Sensor2};{format.Sensor3};{format.Sensor4};{format.Sensor5};{format.Sensor6};{format.Alive};{format.CurrentFitness}";
+        print("sending: " + formatted);
         return formatted;
         //string docPath = "C:/Users/alext/PycharmProjects/neuralTesting";
 
@@ -310,8 +340,21 @@ public class CarMove : MonoBehaviour
                 d = false;
             }
         }
+    }
 
-        
+    void handleDeath()
+    {
+        alive = false;
+        rend.enabled = false;
+        transform.position = spawnPos;
+        transform.localRotation = spawnRot;
+        rb.velocity = Vector2.zero;
+        sendDeathMsg = true;
+    }
 
+    void handleRespawn()
+    {
+        alive = true;
+        rend.enabled = true;
     }
 }

@@ -16,4 +16,9 @@ public class HelloClient : MonoBehaviour
     {
         _helloRequester.Stop();
     }
+
+    private void OnDisable()
+    {
+        _helloRequester.Stop();
+    }
 }

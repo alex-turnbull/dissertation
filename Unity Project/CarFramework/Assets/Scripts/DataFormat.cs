@@ -11,6 +11,8 @@ public class DataFormat
     public float Sensor4 { get; set; }
     public float Sensor5 { get; set; }
     public float Sensor6 { get; set; }
+    public string Alive { get; set; }
+    public float CurrentFitness { get; set; }
 
     public bool W { get; set; }
     public bool S { get; set; }
