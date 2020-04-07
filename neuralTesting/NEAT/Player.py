@@ -13,7 +13,7 @@ class Player:
     fitness = None
     brain = None
 
-    vision = [0] * 6  # ALL inputs from Unity
+    vision = [0] * 10  # ALL inputs from Unity
     decision = [0] * 4  # Output buttons
     unadjustedFitness = None
     lifespan = 0
@@ -21,7 +21,7 @@ class Player:
     score = None
     gen = 0
 
-    genomeInputs = 6
+    genomeInputs = 10
     genomeOutputs = 4
 
     server = None
@@ -41,13 +41,15 @@ class Player:
         pass
 
     def update(self):
-        # Unity????????
         pass
 
     def look(self):
         # UNITY?!?????????
         data = self.server.getData()
-        self.vision = data
+        if data == "kill":
+            self.dead = True
+        else:
+            self.vision = data
 
     def think(self):
         max = 0
@@ -82,7 +84,9 @@ class Player:
         return clone
 
     def calculateFitness(self):
-        pass
+        self.score = self.server.getFinalScore()
+        self.fitness = self.score * self.score
+        return self.fitness
 
     def crossover(self, parent2):
         child = Player()

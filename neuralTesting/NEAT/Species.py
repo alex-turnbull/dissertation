@@ -74,10 +74,10 @@ class Species:
                     max = self.players[j].fitness
                     maxIndex = j
             temp.append(self.players[maxIndex])
-            self.players.remove(maxIndex)
+            self.players.pop(maxIndex)
             i -= 1
 
-        self.players = temp.clone()
+        self.players = temp
         if len(self.players) == 0:
             print("Fucking")
             self.staleness = 200
@@ -100,7 +100,7 @@ class Species:
 
     def giveMeBaby(self, innovationHistory):
         baby = None
-        if random.random(1) < 0.25:
+        if random.uniform(0, 1) < 0.25:
             baby = self.selectPlayer().clone()
         else:
             parent1 = self.selectPlayer()
@@ -119,7 +119,7 @@ class Species:
         for i in range(0,len(self.players)):
             fitnessSum += self.players[i].fitness
 
-        rand = random.random(fitnessSum)
+        rand = random.uniform(0, fitnessSum)
         runningSum = 0
 
         for i in range(0,len(self.players)):
@@ -131,8 +131,13 @@ class Species:
 
     def cull(self):
         if len(self.players) > 2:
-            for i in range(int(len(self.players)/2), len(self.players)):
-                self.players.remove(i)
+            i = int((len(self.players)/2) - 1)
+            while i <= len(self.players):
+                i += 1
+                if i == len(self.players):
+                    break
+                # for i in range(int(len(self.players)/2), len(self.players)):
+                self.players.pop(i)
                 i -= 1
 
     def fitnessSharing(self):

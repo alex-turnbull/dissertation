@@ -9,7 +9,7 @@ class Population:
     pop = []
     bestPlayer = None
     bestScore = 0
-    gen = None
+    gen = 0
     innovationHistory = []
     genPlayers = []
     species = []
@@ -52,8 +52,8 @@ class Population:
             self.bestPlayer = tempBest.cloneForReplay()
 
     def naturalSelection(self):
-        self.speciate()
         self.calculateFitness()
+        self.speciate()
         self.sortSpecies()
         if self.massExtinctionEvent:
             self.massExtinction()
@@ -72,7 +72,7 @@ class Population:
         for j in range(0, len(self.species)):
             print("best unadjusted fitness: ", self.species[j].bestFitness)
             for i in range(0, len(self.species[j].players)):
-                print("player " + i, "fitness: " + self.species.get(j).players.get(i).fitness, "score " + self.species.get(j).players.get(i).score, ' ')
+                print("player " + str(i), "fitness: " + str(self.species[j].players[i].fitness), "score " + str(self.species[j].players[i].score), ' ')
             print(" ")
             children.append(self.species[j].champ.cloneForReplay())
 
@@ -84,7 +84,7 @@ class Population:
             children.append(self.species[0].giveMeBaby(self.innovationHistory))
 
         self.pop.clear()
-        pop = children.clone()
+        self.pop = children
         self.gen += 1
         for i in range(0, len(self.pop)):
             self.pop[i].brain.generateNetwork()
@@ -105,7 +105,7 @@ class Population:
                 self.species.append(Species.Species(self.pop[i]))
 
     def calculateFitness(self):
-        for i in range(1, len(self.pop)):
+        for i in range(0, len(self.pop)):
             self.pop[i].calculateFitness()
 
 
@@ -123,10 +123,10 @@ class Population:
                     maxIndex = j
 
             temp.append(self.species[maxIndex])
-            self.species.remove(maxIndex)
+            self.species.pop(maxIndex)
             i -= 1
 
-        self.species = temp.clone()
+        self.species = temp
 
     def killStaleSpecies(self):
         for i in range(2, len(self.species)):
@@ -157,5 +157,5 @@ class Population:
 
     def massExtinction(self):
         for i in range(5, len(self.species)):
-            self.species.remove(i)
+            self.species.pop(i)
             i -= 1

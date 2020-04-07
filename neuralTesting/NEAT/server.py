@@ -39,6 +39,9 @@ class carServer:
         self.outputString = ""
         self.outputMsg = None
 
+        self.dead = False
+
+        self.currentScore = 0
 
         thread = threading.Thread(target=self.run, args=())
         thread.daemon = True
@@ -46,45 +49,28 @@ class carServer:
 
     def run(self):
         print("server on port", self.port, "RUNNING")
-        while True:
-            #  Wait for next request from client
-            message = self.socket.recv()
-            print("Received request: %s" % message, "On port:", self.port)
-
-            #  Do some 'work'.
-            time.sleep(delayTime/2)
-
-            msgFormat = str(message)
-            msgFormat = msgFormat[2:]
-            msgFormat = msgFormat[:-1]
-            msgFormat = msgFormat.split(";")
-            #print("Format Msg: %s" % msgFormat)
-
-            self.lookData = [msgFormat[0], msgFormat[1], msgFormat[2], msgFormat[3], msgFormat[4], msgFormat[5]]
-            """
-            X = [
-                [msgFormat[0], msgFormat[1], msgFormat[2], msgFormat[3], msgFormat[4], msgFormat[5], msgFormat[6], msgFormat[7],
-                 msgFormat[8], msgFormat[9]]
-                ]
-            X = np.array(X, dtype=float)
-
-            
-            predictOutput = mlp.predict(X, model)
-            """
-            outputString = ""
-            # a = predictOutput.reshape(1, 4)
-            # for x in np.nditer(a):
-                # outputString = outputString + str(x) + ";"
-
-            while not self.readyToSend:
-                if self.send:
-                    print("Sending Output: %s" % self.outputString)
-                    self.socket.send(self.outputMsg)
-                    self.send = False
-                    time.sleep(delayTime / 2)
-                    break
 
     def getData(self):
+        message = self.socket.recv()
+        print("Received request: %s" % message, "On port:", self.port)
+
+        #  Do some 'work'.
+        time.sleep(delayTime / 2)
+
+        msgFormat = str(message)
+        msgFormat = msgFormat[2:]
+        msgFormat = msgFormat[:-1]
+        msgFormat = msgFormat.split(";")
+        command = msgFormat[0]
+        # print("Format Msg: %s" % msgFormat)
+
+        self.lookData = [msgFormat[1], msgFormat[2], msgFormat[3], msgFormat[4], msgFormat[5], msgFormat[6], msgFormat[7], msgFormat[8], msgFormat[9], msgFormat[10]]
+
+        self.currentScore = float(msgFormat[12])
+
+        if msgFormat[11] == "False":
+            self.lookData = "kill"
+
         return self.lookData
 
     def sendData(self, outData):
@@ -102,4 +88,12 @@ class carServer:
         self.outputMsg = b"" + self.outputString
 
         self.send = True
+
+        print("Sending Output: %s" % self.outputString)
+        self.socket.send(self.outputMsg)
+        self.send = False
+        time.sleep(delayTime / 2)
+
+    def getFinalScore(self):
+        return self.currentScore
 

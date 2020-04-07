@@ -21,8 +21,12 @@ def setup(population):
     while True:
         tick(pop)
 
+
 def tick(pop):
-    pop.updateAlive()
+    if not pop.done():
+        pop.updateAlive()
+    else:
+        pop.naturalSelection()
 
 
 parser = argparse.ArgumentParser(description='The main shit')
