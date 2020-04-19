@@ -2,7 +2,7 @@
 
 public class HelloClient : MonoBehaviour
 {
-    private HelloRequester _helloRequester;
+    public HelloRequester _helloRequester;
 
     private void Start()
     {

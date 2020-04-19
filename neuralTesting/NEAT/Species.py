@@ -66,7 +66,9 @@ class Species:
     def sortSpecies(self):
         temp = []
 
-        for i in range(0, len(self.players)):
+        i = 0 - 1
+        while len(self.players) > 0:
+            i += 1
             max = 0
             maxIndex = 0
             for j in range(0, len(self.players)):

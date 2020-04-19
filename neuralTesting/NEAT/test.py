@@ -1,12 +1,11 @@
-#import random
-#for i in range(0,100):
-#    print(random.randrange(-1,1))
+a = [1,2,3,4,5,6,7,8,9,10]
 
-while True:
-    print("First Loop")
-    while True:
-        print("Second Loop")
-        break;
-    print("Second Loop Exit")
+i = 2 - 1
+while i+1 < len(a):
+    print("BEFORE", a)
+    i+= 1
+    a.pop(i)
+    i-= 1
+    print("AFTER", a)
 
-print("First Loop Exit")
+print("done")

@@ -13,25 +13,27 @@ class Player:
     fitness = None
     brain = None
 
-    vision = [0] * 10  # ALL inputs from Unity
-    decision = [0] * 4  # Output buttons
+    genomeInputs = 10
+    genomeOutputs = 4
+
+    vision = [0] * genomeInputs  # ALL inputs from Unity
+    decision = [0] * genomeOutputs  # Output buttons
     unadjustedFitness = None
     lifespan = 0
     dead = False
     score = None
     gen = 0
 
-    genomeInputs = 10
-    genomeOutputs = 4
-
     server = None
     port = None
 
+    id = ""
+
     def __init__(self):
         self.brain = Genome.Genome(self.genomeInputs, self.genomeOutputs)
-        self.port = str(Globals.currentPort)
-        Globals.currentPort += 1
-        self.server = server.carServer(self.port)
+
+        self.id = "g" + str(self.gen) + ":n" + str(Globals.count)
+        Globals.count += 1
 
     def show(self):
         pass
@@ -41,15 +43,13 @@ class Player:
         pass
 
     def update(self):
-        pass
+        if self.server.dead:
+            self.dead = True
 
     def look(self):
         # UNITY?!?????????
         data = self.server.getData()
-        if data == "kill":
-            self.dead = True
-        else:
-            self.vision = data
+        self.vision = data
 
     def think(self):
         max = 0
@@ -61,7 +61,7 @@ class Player:
                 max = decision[i]
                 maxIndex = i
 
-        self.server.sendData(decision)
+        self.server.mostRecentOutData = decision
 
 
     def clone(self):
@@ -86,6 +86,7 @@ class Player:
     def calculateFitness(self):
         self.score = self.server.getFinalScore()
         self.fitness = self.score * self.score
+        del self.server
         return self.fitness
 
     def crossover(self, parent2):

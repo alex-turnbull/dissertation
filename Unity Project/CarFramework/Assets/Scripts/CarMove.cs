@@ -58,7 +58,7 @@ public class CarMove : MonoBehaviour
     SpriteRenderer rend;
 
     public bool sendDeathMsg;
-
+    public bool flaggedToRespawn = false;
 
 
     void Start()
@@ -197,6 +197,13 @@ public class CarMove : MonoBehaviour
             //a = Input.GetKey(KeyCode.A) ? true : false;
             //d = Input.GetKey(KeyCode.D) ? true : false;
         }
+        else
+        {
+            if (flaggedToRespawn)
+            {
+                handleRespawn();
+            }
+        }
 
     }
 
@@ -278,7 +285,7 @@ public class CarMove : MonoBehaviour
         //format.D = d;
 
         string formatted = $"-a;{format.Speed};{format.Angle};{format.Steering};{format.Acceleration};{format.Sensor1};{format.Sensor2};{format.Sensor3};{format.Sensor4};{format.Sensor5};{format.Sensor6};{format.Alive};{format.CurrentFitness}";
-        print("sending: " + formatted);
+        //print("sending: " + formatted);
         return formatted;
         //string docPath = "C:/Users/alext/PycharmProjects/neuralTesting";
 
@@ -352,9 +359,12 @@ public class CarMove : MonoBehaviour
         sendDeathMsg = true;
     }
 
-    void handleRespawn()
+    public void handleRespawn()
     {
+        fitness = 0;
+        timeAlive = 0;
         alive = true;
         rend.enabled = true;
-    }
+        flaggedToRespawn = false;
+    } 
 }

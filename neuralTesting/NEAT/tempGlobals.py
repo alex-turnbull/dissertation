@@ -20,4 +20,8 @@ genPlayerTemp = None
 
 showNothing = False
 
+startPort = 6000
 currentPort = 6000
+
+startCount = 0
+count = 0

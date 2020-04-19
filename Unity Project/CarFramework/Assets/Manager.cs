@@ -8,7 +8,10 @@ public class Manager : MonoBehaviour
     public GameObject car;
     public GameObject spawn;
     private int port = 6000;
+    public string managerPort;
     public bool callScript;
+    public List<CarMove> activeCars = new List<CarMove>();
+    public int generation = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +23,7 @@ public class Manager : MonoBehaviour
             spawnedCar.SetActive(true);
             spawnedCar.GetComponent<CarMove>().port = port.ToString();
             port += 1;
+            activeCars.Add(spawnedCar.GetComponent<CarMove>());
         }
 
         if (callScript)
@@ -34,5 +38,23 @@ public class Manager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void ReactivateCars()
+    {
+        for (int i = 0; i < activeCars.Count; i++)
+        {
+            activeCars[i].flaggedToRespawn = true;
+        }
+    }
+
+    public void handleMessage(string msg)
+    {
+        print(msg);
+        if(msg == "respawn")
+        {
+            ReactivateCars();
+            generation++;
+        }
     }
 }

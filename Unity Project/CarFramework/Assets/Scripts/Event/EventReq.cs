@@ -8,14 +8,10 @@ using UnityEngine;
 ///     You can copy this class and modify Run() to suits your needs.
 ///     To use this class, you just instantiate, call Start() when you want to start and Stop() when you want to stop.
 /// </summary>
-public class HelloRequester : RunAbleThread
+public class EventReq : RunAbleThread
 {
-    public CarMove carRef;
     public string port;
-
-    public bool sendDeathMsg;
-
-    RequestSocket client;
+    public Manager managerRef;
     /// <summary>
     ///     Request Hello message to server and receive message back. Do it 10 times.
     ///     Stop requesting when Running=false.
@@ -23,20 +19,16 @@ public class HelloRequester : RunAbleThread
     protected override void Run()
     {
         ForceDotNet.Force(); // this line is needed to prevent unity freeze after one use, not sure why yet
-        using (client = new RequestSocket())
+        using (RequestSocket client = new RequestSocket())
         {
             string connector = "tcp://localhost:";
             connector += port;
-            client.Connect(connector);
+            client.Connect(connector);            
 
             while (Running)
             {
-                client.SendFrame(carRef.OutputData());
-                // ReceiveFrameString() blocks the thread until you receive the string, but TryReceiveFrameString()
-                // do not block the thread, you can try commenting one and see what the other does, try to reason why
-                // unity freezes when you use ReceiveFrameString() and play and stop the scene without running the server
-                //                string message = client.ReceiveFrameString();
-                //                Debug.Log("Received: " + message);
+                client.SendFrame("");
+
                 string message = null;
                 bool gotMessage = false;
                 while (Running)
@@ -47,8 +39,9 @@ public class HelloRequester : RunAbleThread
 
                 if (gotMessage)
                 {
-                    carRef.handleMessage(message);
-                }                  
+                    //Debug.Log("Received " + message);
+                    managerRef.handleMessage(message);
+                }
                 
             }
         }

@@ -3,6 +3,8 @@ import math
 import tempGlobals as globals
 import Player as Player
 import Species as Species
+import eventServer as servers
+import server as Server
 
 
 class Population:
@@ -17,9 +19,19 @@ class Population:
     massExtinctionEvent = False
     newStage = False
 
+    server = None
+    serverPort = "6020"
+
+    serverList = []
+
     def __init__(self, size):
+        self.server = servers.eventServer(self.serverPort)
         for i in range(0, size):
             self.pop.append(Player.Player())
+            port = str(globals.currentPort)
+            globals.currentPort += 1
+            self.pop[i].server = Server.carServer(port)
+            self.serverList.append(self.pop[i].server)
             self.pop[i].brain.generateNetwork()
             self.pop[i].brain.mutate(self.innovationHistory)
 
@@ -74,7 +86,7 @@ class Population:
             for i in range(0, len(self.species[j].players)):
                 print("player " + str(i), "fitness: " + str(self.species[j].players[i].fitness), "score " + str(self.species[j].players[i].score), ' ')
             print(" ")
-            children.append(self.species[j].champ.cloneForReplay())
+            # children.append(self.species[j].champ.cloneForReplay())
 
             NoOfChildren = math.floor(self.species[j].averageFitness/averageSum * len(self.pop))
             for i in range(0, NoOfChildren):
@@ -86,8 +98,14 @@ class Population:
         self.pop.clear()
         self.pop = children
         self.gen += 1
+
+        # Reactivate Unity Cars
         for i in range(0, len(self.pop)):
             self.pop[i].brain.generateNetwork()
+            self.pop[i].server = self.serverList[i]
+
+        self.server.getData()
+        self.server.sendData("respawn")
 
     def speciate(self):
         for s in self.species:
@@ -114,7 +132,10 @@ class Population:
             s.sortSpecies()
 
         temp = []
-        for i in range(0, len(self.species)):
+
+        i  = 0 - 1
+        while i+1 < len(self.species):
+            i += 1
             max = 0
             maxIndex = 0
             for j in range(0, len(self.species)):
@@ -129,7 +150,9 @@ class Population:
         self.species = temp
 
     def killStaleSpecies(self):
-        for i in range(2, len(self.species)):
+        i = 2 - 1
+        while i+1 <= len(self.species):
+            i += 1
             if self.species[i].staleness >= 15:
                 self.species.remove(i)
                 i -= 1
@@ -137,8 +160,10 @@ class Population:
     def killBadSpecies(self):
         averageSum = self.getAvgFitnessSum()
 
-        for i in range(1, len(self.species)):
-            if self.species[i].averageFitness/averageSum* len(self.pop) < 1:
+        i = 1 - 1
+        while i+1 < len(self.species):
+            i += 1
+            if self.species[i].averageFitness/averageSum * len(self.pop) < 1:
                 self.species.remove(i)
                 i -= 1
 
@@ -156,6 +181,8 @@ class Population:
             s.setAverage()
 
     def massExtinction(self):
-        for i in range(5, len(self.species)):
+        i = 5 - 1
+        while i+1 <= len(self.species):
+            i += 1
             self.species.pop(i)
             i -= 1
