@@ -99,11 +99,12 @@ class Population:
         self.pop = children
         self.gen += 1
 
-        # Reactivate Unity Cars
+        # Assign the server for the cars to communicate on with NEAT
         for i in range(0, len(self.pop)):
             self.pop[i].brain.generateNetwork()
             self.pop[i].server = self.serverList[i]
 
+        # Reactivate Unity Cars
         self.server.getData()
         self.server.sendData("respawn")
 

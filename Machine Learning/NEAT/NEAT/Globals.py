@@ -1,8 +1,12 @@
+"""
+
+Collections of Global Variables to control the program
+
+"""
+
 nextConnectionNo = 1000
 pop = None
-speed = 60
 
-showBest = True
 runBest = False
 humanPlaying = False
 
@@ -12,13 +16,9 @@ runThroughSpecies = False
 upToSpecies = 0
 speciesChamp = False
 
-showBrain = False
-
-showBestEachGen = False
 upToGen = 0
 genPlayerTemp = None
 
-showNothing = False
 
 startPort = 6000
 currentPort = 6000

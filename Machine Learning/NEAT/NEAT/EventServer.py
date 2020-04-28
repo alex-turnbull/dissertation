@@ -1,3 +1,10 @@
+"""
+
+A modified instance of a server that also runs, provides commands to Unity to handle certain events.
+Currenetly just handling activation of the cars once the evolution has happened.
+
+"""
+
 import time
 import zmq
 import sys

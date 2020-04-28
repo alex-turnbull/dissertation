@@ -29,6 +29,7 @@ def tick(pop):
         pop.naturalSelection()
 
 
+# Main program, this process gets called from command line in Unity
 parser = argparse.ArgumentParser(description='The main process to initate NEAT')
 parser.add_argument('--population_size', type=int, default='10', help='Number of agents to generate')
 
