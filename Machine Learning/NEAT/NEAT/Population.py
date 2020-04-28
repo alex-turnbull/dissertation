@@ -4,7 +4,7 @@ import Globals as globals
 import Player as Player
 import Species as Species
 import EventServer as servers
-import server as Server
+import Server as Server
 
 
 class Population:

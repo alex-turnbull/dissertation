@@ -1,5 +1,5 @@
 import Genome as Genome
-import server as server
+import Server as server
 import Globals as Globals
 
 # Maybe this can store some sort of reference ID, and then can poll unity for
