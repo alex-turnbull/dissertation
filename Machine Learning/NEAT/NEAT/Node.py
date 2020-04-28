@@ -1,5 +1,6 @@
 import math
 
+
 class Node:
     number = None
     inputSum = 0

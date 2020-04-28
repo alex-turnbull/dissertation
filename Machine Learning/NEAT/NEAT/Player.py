@@ -1,13 +1,10 @@
 import Genome as Genome
 import server as server
-import tempGlobals as Globals
-
-# I think I've somehow got to create a connection between this
-# and an entity in unity :think:
-# YIKES
+import Globals as Globals
 
 # Maybe this can store some sort of reference ID, and then can poll unity for
 # it's respective reference for the values
+
 
 class Player:
     fitness = None

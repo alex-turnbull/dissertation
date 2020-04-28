@@ -1,11 +1,10 @@
-
 fromNode = None
 toNode = None
 innovationNumber = None
-
 innovationNumbers = []
 
-class connectionHistory:
+
+class ConnectionHistory:
     def __init__(self, fromNode, to, inno, innovationNos):
         self.fromNode = fromNode
         self.toNode = to

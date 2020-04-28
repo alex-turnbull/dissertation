@@ -1,9 +1,9 @@
 import math
 
-import tempGlobals as globals
+import Globals as globals
 import Player as Player
 import Species as Species
-import eventServer as servers
+import EventServer as servers
 import server as Server
 
 
@@ -25,12 +25,12 @@ class Population:
     serverList = []
 
     def __init__(self, size):
-        self.server = servers.eventServer(self.serverPort)
+        self.server = servers.EventServer(self.serverPort)
         for i in range(0, size):
             self.pop.append(Player.Player())
             port = str(globals.currentPort)
             globals.currentPort += 1
-            self.pop[i].server = Server.carServer(port)
+            self.pop[i].server = Server.CarServer(port)
             self.serverList.append(self.pop[i].server)
             self.pop[i].brain.generateNetwork()
             self.pop[i].brain.mutate(self.innovationHistory)

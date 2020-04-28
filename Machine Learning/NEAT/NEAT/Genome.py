@@ -5,10 +5,10 @@
 import math
 import random
 
-import tempGlobals as globals
+import Globals as globals
 import Node as Node
-import connectionGene as connectionGene
-import connectionHistory as connectionHistory
+import ConnectionGene as connectionGene
+import ConnectionHistory as connectionHistory
 
 
 class Genome:
@@ -103,16 +103,16 @@ class Genome:
         self.nextNode += 1
 
         connectionInnovationNumber = self.getInnovationNumber(innovationHistory, self.genes[randomConnection].fromNode, self.getNode(newNodeNo))
-        self.genes.append(connectionGene.connectionGene(self.genes[randomConnection].fromNode, self.getNode(newNodeNo), 1, connectionInnovationNumber))
+        self.genes.append(connectionGene.ConnectionGene(self.genes[randomConnection].fromNode, self.getNode(newNodeNo), 1, connectionInnovationNumber))
 
         connectionInnovationNumber = self.getInnovationNumber(innovationHistory, self.getNode(newNodeNo), self.genes[randomConnection].toNode)
 
-        self.genes.append(connectionGene.connectionGene(self.getNode(newNodeNo), self.genes[randomConnection].toNode, self.genes[randomConnection].weight, connectionInnovationNumber))
+        self.genes.append(connectionGene.ConnectionGene(self.getNode(newNodeNo), self.genes[randomConnection].toNode, self.genes[randomConnection].weight, connectionInnovationNumber))
         self.getNode(newNodeNo).layer = self.genes[randomConnection].fromNode.layer + 1
 
         connectionInnovationNumber = self.getInnovationNumber(innovationHistory, self.nodes[self.biasnode], self.getNode(newNodeNo))
 
-        self.genes.append( connectionGene.connectionGene(self.nodes[self.biasnode], self.getNode(newNodeNo), 0, connectionInnovationNumber))
+        self.genes.append(connectionGene.ConnectionGene(self.nodes[self.biasnode], self.getNode(newNodeNo), 0, connectionInnovationNumber))
 
         if self.getNode(newNodeNo).layer == self.genes[randomConnection].toNode.layer:
             for i in range(0, len(self.nodes)):
@@ -142,7 +142,7 @@ class Genome:
 
         connectionInnovationNumber = self.getInnovationNumber(innovationHistory, self.nodes[randomNode1], self.nodes[randomNode2])
 
-        self.genes.append(connectionGene.connectionGene(self.nodes[randomNode1], self.nodes[randomNode2], random.uniform(-1, 1), connectionInnovationNumber))
+        self.genes.append(connectionGene.ConnectionGene(self.nodes[randomNode1], self.nodes[randomNode2], random.uniform(-1, 1), connectionInnovationNumber))
         self.connectNodes()
 
     def randomConnectionNodesAreShit(self, r1, r2):
@@ -168,7 +168,7 @@ class Genome:
             for i in range(0, len(self.genes)):
                 innoNumbers.append(self.genes[i].innovationNo)
 
-            innovationHistory.append(connectionHistory.connectionHistory(nodeFrom.number, nodeTo.number, connectionInnovationNumber, innoNumbers))
+            innovationHistory.append(connectionHistory.ConnectionHistory(nodeFrom.number, nodeTo.number, connectionInnovationNumber, innoNumbers))
             globals.nextConnectionNo += 1
 
         return connectionInnovationNumber

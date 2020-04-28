@@ -12,18 +12,19 @@ import numpy as np
 import argparse
 import threading
 
-#parser = argparse.ArgumentParser(description='Runs a server for communicating data between Unity and ML')
-#parser.add_argument('--delay_time', type=float, default=0.5, help='adds a delay between data communication, default 0.5')
-#parser.add_argument('--model_directory', type=str, default='TrainedModel5.npy', help='the directory of the trained model, default TrainedModel5')
-#parser.add_argument('--server_port', type=str, help='port the server should run on')
+# parser = argparse.ArgumentParser(description='Runs a server for communicating data between Unity and ML')
+# parser.add_argument('--delay_time', type=float, default=0.5, help='adds a delay between data communication, default 0.5')
+# parser.add_argument('--model_directory', type=str, default='TrainedModel5.npy', help='the directory of the trained model, default TrainedModel5')
+# parser.add_argument('--server_port', type=str, help='port the server should run on')
 
-#args = parser.parse_args()
+# args = parser.parse_args()
 
 delayTime = float(0.5)
 modelDir = 'TrainedModel5.npy'
 # model = np.load(modelDir)
 
-class carServer:
+
+class CarServer:
     def __init__(self, port):
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)

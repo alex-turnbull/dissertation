@@ -1,17 +1,17 @@
 import random
-
 import numpy
 
-class connectionGene:
+
+class ConnectionGene:
     fromNode = None
     toNode = None
     weight = None
     enabled = True
     innovationNo = None
 
-    def __init__(self, fromN, to, w, inno):
-        self.fromNode = fromN
-        self.toNode = to
+    def __init__(self, fromNode, toNode, w, inno):
+        self.fromNode = fromNode
+        self.toNode = toNode
         self.weight = w
         self.innovationNo = inno
 
@@ -26,7 +26,7 @@ class connectionGene:
             if self.weight < -1:
                 self.weight = -1
 
-    def clone(self, fromN, to):
-        clone = connectionGene(fromN, to, self.weight, self.innovationNo)
+    def clone(self, fromNode, toNode):
+        clone = ConnectionGene(fromNode, toNode, self.weight, self.innovationNo)
         clone.enabled = self.enabled
         return clone

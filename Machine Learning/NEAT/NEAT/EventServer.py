@@ -6,7 +6,8 @@ import numpy as np
 import argparse
 import threading
 
-class eventServer:
+
+class EventServer:
     def __init__(self, port):
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)
@@ -25,7 +26,6 @@ class eventServer:
     def run(self):
         print("server on port", self.port, "RUNNING")
         pass
-
 
     def getData(self):
         message = self.socket.recv()
