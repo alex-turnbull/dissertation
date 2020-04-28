@@ -6,6 +6,8 @@ import time
 import datetime
 import argparse
 
+# Supporting Functions
+
 
 def sigmoid(z):
     return 1.0 / (1 + np.exp(-z))
@@ -20,6 +22,8 @@ def timer(start,end):
     minutes, seconds = divmod(rem, 60)
     print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
 
+
+#
 
 def train(X, y, n_hidden, learning_rate, n_iter):
     m, n_input = X.shape
@@ -42,15 +46,20 @@ def train(X, y, n_hidden, learning_rate, n_iter):
         b2 = b2 - learning_rate * db2 / m
         weight1 = weight1 - learning_rate * dW1 / m
         b1 = b1 - learning_rate * db1 / m
+
+        # output data to console
         if i % 100 == 0:
             cost = np.mean((y-A3) ** 2)
             print("Input : \n" + str(X))
             print("Actual Output: \n" + str(y))
             print("Predicted Output: \n" + str(A3))
             print('Iteration %i, training loss: %f, Accuracy: %f' % (i, cost, (100-(cost*100))))
+
+    # Ensure that no data is truncated before saving model
     np.set_printoptions(threshold=sys.maxsize)
     modelOut = {'weight1': weight1, 'b1': b1, 'weight2': weight2, 'b2': b2}
-    # print(modelOut)
+
+    # if requested, save model to a file either generatedfor with a given name
     if output == "y":
         if len(args.output_file) >= 1:
             finalOutputFile = args.output_file
@@ -61,13 +70,15 @@ def train(X, y, n_hidden, learning_rate, n_iter):
 
         print("Saved data to file: ", finalOutputFile + '.npy')
 
-
         # f = open("TrainedModel.txt", "w")
         # f.writelines(str(modelOut))
         # f.close()
+
     elapsed_time = time.time() - start_time
     print("Runtime: ", str(datetime.timedelta(seconds=elapsed_time)))
     return modelOut
+
+# Main Program
 
 
 parser = argparse.ArgumentParser(description='trains and outputs a neural network given training data')
@@ -82,9 +93,10 @@ args = parser.parse_args()
 X = []
 y = []
 
-dir = args.training_data
+directory = args.training_data
 
-with open(dir) as csvfile:
+# Parsing / conversion of the training data
+with open(directory) as csvfile:
     readCSV = csv.reader(csvfile, delimiter=';')
     for row in readCSV:
         X.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]])
@@ -108,10 +120,10 @@ with open(dir) as csvfile:
         # print(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
         # print(row[10], row[11], row[12], row[13])
 
+# Setup and run the training
+
 X = np.array(X, dtype=float)
 y = np.array(y, dtype=float)
-
-print(X)
 
 n_hidden = args.hidden_layers
 learning_rate = args.learning_rate
