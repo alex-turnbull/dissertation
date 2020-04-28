@@ -90,10 +90,10 @@ class Population:
 
             NoOfChildren = math.floor(self.species[j].averageFitness/averageSum * len(self.pop))
             for i in range(0, NoOfChildren):
-                children.append(self.species[j].giveMeBaby(self.innovationHistory))
+                children.append(self.species[j].produceChild(self.innovationHistory))
 
         while len(children) < len(self.pop):
-            children.append(self.species[0].giveMeBaby(self.innovationHistory))
+            children.append(self.species[0].produceChild(self.innovationHistory))
 
         self.pop.clear()
         self.pop = children

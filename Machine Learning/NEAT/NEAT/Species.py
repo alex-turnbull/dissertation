@@ -21,7 +21,6 @@ class Species:
         self.champ = p.cloneForReplay()
 
     def sameSpecies(self, g):
-        compatibility = 0
         excessAndDisjoint = self.getExcessDisjoint(g, self.rep)
         averageWeightDiff = self.averageWeightDiff(g, self.rep)
 
@@ -100,21 +99,20 @@ class Species:
 
         self.averageFitness = sum/len(self.players)
 
-    def giveMeBaby(self, innovationHistory):
-        baby = None
+    def produceChild(self, innovationHistory):
         if random.uniform(0, 1) < 0.25:
-            baby = self.selectPlayer().clone()
+            child = self.selectPlayer().clone()
         else:
             parent1 = self.selectPlayer()
             parent2 = self.selectPlayer()
 
             if parent1.fitness < parent2.fitness:
-                baby = parent2.crossover(parent1)
+                child = parent2.crossover(parent1)
             else:
-                baby = parent1.crossover(parent2)
+                child = parent1.crossover(parent2)
 
-        baby.brain.mutate(innovationHistory)
-        return baby
+        child.brain.mutate(innovationHistory)
+        return child
 
     def selectPlayer(self):
         fitnessSum = 0
