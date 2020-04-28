@@ -1,3 +1,10 @@
+"""
+
+Server set-up to recieve an input message from the Unity client and using the prediction script to provide an output
+to send back to the client.
+
+"""
+
 import time
 import zmq
 import sys
@@ -5,6 +12,7 @@ import predict as mlp
 import numpy as np
 import argparse
 
+# Handle and parse command line arguments
 parser = argparse.ArgumentParser(description='Runs a server for communicating data between Unity and ML')
 parser.add_argument('--delay_time', type=float, default=0.5, help='adds a delay between data communication')
 parser.add_argument('--model_directory', type=str, default='TrainedModel5.npy', help='the directory of the trained model')
@@ -24,7 +32,6 @@ while True:
     message = socket.recv()
     print("Received request: %s" % message)
 
-    #  Do some 'work'.
     time.sleep(delayTime/2)
 
     msgFormat = str(message)
@@ -39,6 +46,7 @@ while True:
         ]
     X = np.array(X, dtype=float)
 
+    # Use the input and saved model to predict what values should be output
     predictOutput = mlp.predict(X, model)
 
     outputString = ""
@@ -48,8 +56,8 @@ while True:
 
     outputString = outputString[:-1]
     outputString = bytes(outputString, 'utf-8')
-    #  Send reply back to client
-    #  In the real world usage, after you finish your work, send your output here
+
+    # Handling and sending of output
     print("Sending Output: %s" % outputString)
     outputMsg = b"" + outputString
     socket.send(outputMsg)

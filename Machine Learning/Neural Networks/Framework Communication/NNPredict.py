@@ -1,3 +1,9 @@
+"""
+
+Reconfigured Prediction script for the predict funciton to be called in the server, can be reused multiple times.
+
+"""
+
 import numpy as np
 import sys
 import argparse
