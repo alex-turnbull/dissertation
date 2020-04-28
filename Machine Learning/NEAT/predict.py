@@ -2,6 +2,8 @@ import numpy as np
 import sys
 import argparse
 
+# Supporting Functions
+
 
 def sigmoid(t):
     return 1 / (1 + np.exp(-t))
@@ -9,6 +11,8 @@ def sigmoid(t):
 
 def sigmoid_derivative(p):
     return p * (1 - p)
+
+#
 
 
 def predict(x, model):
@@ -21,15 +25,17 @@ def predict(x, model):
     return A3
 
 
-parser = argparse.ArgumentParser(description='trains and outputs a neural network given training data')
+# Command line argument parsing and handling
+parser = argparse.ArgumentParser(description='Given a suitable model, produce the prediction values for set inputs')
 parser.add_argument('--trained_model', type=str, default='TrainedModel.npy', help='numpy output trained model')
 
 args = parser.parse_args()
 
 modelDir = args.trained_model
 model = np.load(modelDir)
-X = []
-X.append([0.9845487, 270.8687, 1.0, 0.0, 2.940531, 0.5767461, 0.5667362, 5.482859, 0.6581876, 0.646764])
+
+# pre-determined testing values to see how prediction responds
+X = [[0.9845487, 270.8687, 1.0, 0.0, 2.940531, 0.5767461, 0.5667362, 5.482859, 0.6581876, 0.646764]]
 X = np.array(X, dtype=float)
 print(predict(X, model))
 
