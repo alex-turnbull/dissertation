@@ -10,6 +10,7 @@ public class Manager : MonoBehaviour
     private int port = 6000;
     public string managerPort;
     public bool callScript;
+    public string scriptDirectory;
     public List<CarMove> activeCars = new List<CarMove>();
     public int generation = 0;
     // Start is called before the first frame update
@@ -29,7 +30,7 @@ public class Manager : MonoBehaviour
         if (callScript)
         {
             string strCmdText;
-            strCmdText = $"/K py C:\\Users\\alext\\Documents\\GitHub\\dissertation\\neuralTesting\\NEAT\\NeatCore.py --population_size {popSize}";   //This command to open a new notepad
+            strCmdText = $"/K py {scriptDirectory} --population_size {popSize}";   //This command to open a new notepad
             System.Diagnostics.Process.Start("CMD.exe", strCmdText); //Start cmd process
         }        
     }

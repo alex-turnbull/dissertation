@@ -19,6 +19,10 @@ speciesChamp = False
 upToGen = 0
 genPlayerTemp = None
 
+showNothing = False
+showBest = True
+showBrain = False
+showBestEachGen = False
 
 startPort = 6000
 currentPort = 6000

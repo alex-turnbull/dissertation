@@ -1840,6 +1840,7 @@ MonoBehaviour:
   spawn: {fileID: 212184578}
   managerPort: 6020
   callScript: 1
+  scriptDirectory: C:\\Users\\alext\\Documents\\GitHub\\dissertation\\MachineLearning\\NEAT\\NEAT\\NeatCore.py
   activeCars: []
   generation: 0
 --- !u!4 &293126311
