@@ -1,6 +1,4 @@
 import numpy as np
-import sklearn
-from sklearn import datasets as ds
 import sys
 import csv
 import json as js
@@ -60,6 +58,10 @@ def train(X, y, n_hidden, learning_rate, n_iter):
             finalOutputFile = 'output' + datetime.datetime.now().strftime("%d-%m-%Y %H.%M.%S")
 
         np.save(finalOutputFile + '.npy', modelOut)
+
+        print("Saved data to file: ", finalOutputFile + '.npy')
+
+
         # f = open("TrainedModel.txt", "w")
         # f.writelines(str(modelOut))
         # f.close()
@@ -71,7 +73,7 @@ def train(X, y, n_hidden, learning_rate, n_iter):
 parser = argparse.ArgumentParser(description='trains and outputs a neural network given training data')
 parser.add_argument('--training_data', type=str, default='TrainingData5.csv', help='csv file containing training data')
 parser.add_argument('--iteration_count', type=int, default=10000, help='number of training cycles')
-parser.add_argument('--output_file', type=str, default='', help='the name of the output file')
+parser.add_argument('--output_file', type=str, default='', help='the name of the output file (will auto-generate if left blank)')
 parser.add_argument('--hidden_layers', type=int, default=20, help='number of hidden layers to train on')
 parser.add_argument('--learning_rate', type=float, default=0.1, help='learning rate')
 
@@ -119,17 +121,3 @@ start_time = time.time()
 
 output = input("Output TrainedModel? (y/n) ")
 model = train(X, y, n_hidden, learning_rate, n_iter)
-
-
-def predict(x, model):
-    W1 = model['weight1']
-    b1 = model['b1']
-    W2 = model['weight2']
-    b2 = model['b2']
-    A2 = sigmoid(np.matmul(x, W1) + b1)
-    A3 = np.matmul(A2, W2) + b2
-    return A3
-
-
-x = [[0.9845487, 270.8687, 1.0, 0.0, 2.940531, 0.5767461, 0.5667362, 5.482859, 0.6581876, 0.646764]]
-x = np.array(x, dtype=float)
