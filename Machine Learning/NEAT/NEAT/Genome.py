@@ -131,7 +131,7 @@ class Genome:
 
         randomNode1 = math.floor(random.uniform(0, len(self.nodes)))
         randomNode2 = math.floor(random.uniform(0, len(self.nodes)))
-        while self.randomConnectionNodesAreShit(randomNode1, randomNode2):
+        while self.randomConnectionNodesHandler(randomNode1, randomNode2):
             randomNode1 = math.floor(random.uniform(0, len(self.nodes)))
             randomNode2 = math.floor(random.uniform(0, len(self.nodes)))
 
@@ -145,7 +145,7 @@ class Genome:
         self.genes.append(connectionGene.ConnectionGene(self.nodes[randomNode1], self.nodes[randomNode2], random.uniform(-1, 1), connectionInnovationNumber))
         self.connectNodes()
 
-    def randomConnectionNodesAreShit(self, r1, r2):
+    def randomConnectionNodesHandler(self, r1, r2):
         if self.nodes[r1].layer == self.nodes[r2].layer:
             return True
         if self.nodes[r1].isConnectedTo(self.nodes[r2]):

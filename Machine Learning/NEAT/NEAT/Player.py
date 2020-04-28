@@ -44,7 +44,6 @@ class Player:
             self.dead = True
 
     def look(self):
-        # UNITY?!?????????
         data = self.server.getData()
         self.vision = data
 

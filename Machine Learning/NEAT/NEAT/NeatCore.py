@@ -1,3 +1,11 @@
+"""
+The main process to run and handle the NEAT evolutionary process.
+
+Written in Python based on a Processing template available at:
+https://github.com/Code-Bullet/NEAT_Template/tree/master/TemplateNeat
+
+"""
+
 import Population as Population
 import Player as Player
 import argparse
@@ -21,7 +29,7 @@ def tick(pop):
         pop.naturalSelection()
 
 
-parser = argparse.ArgumentParser(description='The main shit')
+parser = argparse.ArgumentParser(description='The main process to initate NEAT')
 parser.add_argument('--population_size', type=int, default='10', help='Number of agents to generate')
 
 args = parser.parse_args()
