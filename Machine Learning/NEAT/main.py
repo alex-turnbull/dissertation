@@ -1,3 +1,12 @@
+"""
+First pass Neural Network development
+
+With supporting content taken from:
+https://towardsdatascience.com/how-to-build-your-own-neural-network-from-scratch-in-python-68998a08e4f6
+
+"""
+
+
 import numpy as np
 import argparse
 
@@ -70,7 +79,6 @@ class NeuralNetwork:
     def train(self, X, y):
         self.output = self.feedforward()
         self.backprop()
-
 
 
 NN = NeuralNetwork(X, y)
