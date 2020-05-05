@@ -1,3 +1,9 @@
+"""
+
+The class definition for the Car entity of the game
+
+"""
+
 import pygame as pg
 from settings import *
 from pygame.math import Vector2

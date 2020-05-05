@@ -1,3 +1,9 @@
+"""
+
+Class to define the track entity, helpful to store for collision purposes
+
+"""
+
 import pygame
 import random
 from settings import *

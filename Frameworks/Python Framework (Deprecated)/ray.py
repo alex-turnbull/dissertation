@@ -1,3 +1,9 @@
+"""
+
+Attempt to create ray casting within PyGame
+
+"""
+
 from particle import Particle
 import pygame as pg
 

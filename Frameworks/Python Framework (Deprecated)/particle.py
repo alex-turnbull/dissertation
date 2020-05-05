@@ -1,3 +1,9 @@
+"""
+
+Supports the raycasting development technique
+
+"""
+
 import pygame as pg
 from random import randint
 

@@ -1,3 +1,9 @@
+"""
+
+All the code to handle and run the game using PyGame
+
+"""
+
 import pygame
 import settings
 from agent import Agent
@@ -6,6 +12,7 @@ from particle import Particle
 from ray import Ray
 
 
+# testing function to check whether a string can be converted into a number
 def is_number(s):
     try:
         int(s)
@@ -16,25 +23,30 @@ def is_number(s):
 
 class Game:
     def __init__(self):
+        # Initiate a PyGame instance and assign the window parameters
         pygame.init()
         pygame.display.set_caption(settings.scrn_TITLE)
         self.screen = pygame.display.set_mode((settings.scrn_WIDTH,settings.scrn_HEIGHT))
         self.clock = pygame.time.Clock()
+        # Run the game locked at 60 fps
         self.ticks = 60
         self.exit = False
 
     def run(self):
+        # Create the respective components for the game
         agent = Agent()
         track = Track()
 
         sprites = pygame.sprite.Group()
         sprites.add(track)
 
+        # Attempt to create ray casting
         p = Particle()
         rays = []
 
         rays.append(Ray(p, agent.angle))
 
+        # Main Game Loop
         while not self.exit:
             dt = self.clock.get_time() / 1000
 
@@ -72,7 +84,6 @@ class Game:
             if settings.sim_DEBUGLEVEL > 1:
                 olist = agent.mask.outline()
                 pygame.draw.lines(agent.image, (255, 255, 255), 1, olist)
-
 
             pygame.display.flip()
 

@@ -1,3 +1,9 @@
+"""
+
+File containing all the global settings for the game such as size and controls
+
+"""
+
 import pygame
 
 # Globals
