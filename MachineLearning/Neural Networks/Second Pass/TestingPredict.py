@@ -1,3 +1,9 @@
+"""
+
+Testing the prediction side of the network based on a trained model and hard coded inputs, test accuracy
+
+"""
+
 import numpy as np
 import sys
 import argparse

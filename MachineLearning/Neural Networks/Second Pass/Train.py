@@ -1,3 +1,10 @@
+"""
+
+Second Pass on the Neural Network with learning and implementation taken from
+Python Machine Learning by Example, Published by Packt
+
+"""
+
 import numpy as np
 import sys
 import csv
@@ -7,8 +14,6 @@ import datetime
 import argparse
 
 # Supporting Functions
-
-
 def sigmoid(z):
     return 1.0 / (1 + np.exp(-z))
 
@@ -23,7 +28,7 @@ def timer(start,end):
     print("{:0>2}:{:0>2}:{:05.2f}".format(int(hours), int(minutes), seconds))
 
 
-#
+# Neural Network implementation
 
 def train(X, y, n_hidden, learning_rate, n_iter):
     m, n_input = X.shape
@@ -80,7 +85,7 @@ def train(X, y, n_hidden, learning_rate, n_iter):
 
 # Main Program
 
-
+# Handle arguments
 parser = argparse.ArgumentParser(description='trains and outputs a neural network given training data')
 parser.add_argument('--training_data', type=str, default='TrainingData5.csv', help='csv file containing training data')
 parser.add_argument('--iteration_count', type=int, default=10000, help='number of training cycles')
