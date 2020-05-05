@@ -16,7 +16,7 @@ def sigmoid(t):
 def sigmoid_derivative(p):
     return p * (1 - p)
 
-
+# Takes an input and a trained model to predict the outputs
 def predict(x, model):
     W1 = model[()]['weight1']
     b1 = model[()]['b1']
