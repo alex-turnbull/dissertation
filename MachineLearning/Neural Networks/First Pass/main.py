@@ -19,12 +19,14 @@ import csv
 X = []
 y = []
 
+# File parser to read all of the training data
 dir = str(sys.argv[1])
 
 with open(dir) as csvfile:
     readCSV = csv.reader(csvfile, delimiter=';')
     for row in readCSV:
         X.append([row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9]])
+        # Convert booleans to int for clarity
         if row[10] == "True":
             row[10] = 1
         else:
@@ -45,9 +47,11 @@ with open(dir) as csvfile:
         #print(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
         #print(row[10], row[11], row[12], row[13])
 
+# Create NumPy array for the use of the Neural Network
 X = np.array(X, dtype=float)
 y = np.array(y, dtype=float)
 
+# Supporting functions
 def sigmoid(t):
     return 1 / (1 + np.exp(-t))
 
@@ -81,6 +85,7 @@ class NeuralNetwork:
         self.backprop()
 
 
+# Main Program, runs the Network based on the given data for a set time
 NN = NeuralNetwork(X, y)
 for i in range(int(sys.argv[2])):
     if i % 100 == 0:
