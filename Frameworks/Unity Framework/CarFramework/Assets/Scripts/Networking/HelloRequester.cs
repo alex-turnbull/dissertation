@@ -47,6 +47,7 @@ public class HelloRequester : RunAbleThread
 
                 if (gotMessage)
                 {
+                    Debug.Log($"{message} port {port}");
                     carRef.handleMessage(message);
                 }                  
                 
