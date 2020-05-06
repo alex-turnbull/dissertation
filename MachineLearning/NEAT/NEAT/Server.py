@@ -77,8 +77,8 @@ class CarServer:
         pass
 
     def getFinalScore(self):
-        self.context.destroy()
-        self.socket.close()
+        # self.context.destroy()
+        # self.socket.close()
         # print("Server on port", self.port, "CLOSING")
         return self.currentScore
 
