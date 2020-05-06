@@ -1,25 +1,28 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// setup event client
+/// </summary>
 public class EventClient : MonoBehaviour
 {
-    private EventReq _helloRequester;
+    private EventReq _eventReq;
     public Manager manager;
 
     private void Start()
     {
-        _helloRequester = new EventReq();
-        _helloRequester.managerRef = manager;
-        _helloRequester.port = manager.managerPort;
-        _helloRequester.Start();        
+        _eventReq = new EventReq();
+        _eventReq.managerRef = manager;
+        _eventReq.port = manager.managerPort;
+        _eventReq.Start();        
     }
 
     private void OnDestroy()
     {
-        _helloRequester.Stop();
+        _eventReq.Stop();
     }
 
     private void OnDisable()
     {
-        _helloRequester.Stop();
+        _eventReq.Stop();
     }
 }

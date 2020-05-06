@@ -1,4 +1,8 @@
-﻿[System.Serializable]
+﻿/// <summary>
+/// Defines a structure for how data should be sent
+/// </summary>
+
+[System.Serializable]
 public class DataFormat
 {
     public float Speed { get; set; }

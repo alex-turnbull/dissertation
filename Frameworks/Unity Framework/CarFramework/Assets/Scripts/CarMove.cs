@@ -6,6 +6,9 @@ using System.IO;
 using WindowsInput.Native;
 using WindowsInput;
 
+/// <summary>
+/// Handle the car movement and control
+/// </summary>
 public class CarMove : MonoBehaviour
 {
     [Header("Probably less than ideal")]
@@ -67,6 +70,7 @@ public class CarMove : MonoBehaviour
         spawnRot = transform.localRotation;
         rb = GetComponent<Rigidbody2D>();
 
+        // assign events
         if (offTrackEvent == null)
             offTrackEvent = new UnityEvent();
 
@@ -77,7 +81,7 @@ public class CarMove : MonoBehaviour
 
         checkpointEvent.AddListener(CheckpointHit);
 
-        
+        // give colors to the sensors transitioning from red to blue
         GradientColorKey[] gck = new GradientColorKey[2];
         GradientAlphaKey[] gak = new GradientAlphaKey[2];
         gck[0].color = Color.red;
@@ -90,9 +94,9 @@ public class CarMove : MonoBehaviour
         gak[1].time = -1.0F;
         g.SetKeys(gck, gak);
 
+        // if saving data (for training data) call this function every 0.1 seconds
         if(outputValues)
             InvokeRepeating("SaveOutput", .5f, 0.1f);
-        //POLL DATA AND SEND TO SERVER HERE ^^
 
         rend = GetComponent<SpriteRenderer>();
     }
@@ -101,6 +105,7 @@ public class CarMove : MonoBehaviour
     {
         if (alive)
         {
+            // hande movement 
             speeds = transform.up * (v * acceleration);
             rb.AddForce(speeds);
 
@@ -128,14 +133,10 @@ public class CarMove : MonoBehaviour
             }
 
             Vector2 rightAngleFromForward = Quaternion.AngleAxis(steeringRightAngle, Vector3.forward) * forward;
-            //Debug.DrawLine((Vector3)rb.position, (Vector3)rb.GetRelativePoint(rightAngleFromForward), Color.green);
 
             float driftForce = Vector2.Dot(rb.velocity, rb.GetRelativeVector(rightAngleFromForward.normalized));
 
-            Vector2 relativeForce = (rightAngleFromForward.normalized * -1.0f) * (driftForce * 10.0f);
-
-
-            //Debug.DrawLine((Vector3)rb.position, (Vector3)rb.GetRelativePoint(relativeForce), Color.red);
+            Vector2 relativeForce = (rightAngleFromForward.normalized * -1.0f) * (driftForce * 10.0f);            
 
             rb.AddForce(rb.GetRelativeVector(relativeForce));
 
@@ -145,6 +146,7 @@ public class CarMove : MonoBehaviour
             curAcceleration = v;
         }
 
+        // allow user input 
         if (manualControl)
         {
             h = -Input.GetAxis("Horizontal");
@@ -156,13 +158,19 @@ public class CarMove : MonoBehaviour
     {        
         if (alive)
         {
+            // calculate "fitness"
             fitness += (Time.deltaTime * 0.1f);
             timeAlive += Time.deltaTime;
+
+            // kill if stale
             if (timeAlive > 20 && !(fitness > 15))
                 handleDeath();
 
+
+            // Sensor handling
             RaycastHit2D hit;
 
+            // each ray rotated equally around 360 degrees
             var thetaAngle = 360 / (sensors);
             var startAngle = 360;
 
@@ -184,13 +192,8 @@ public class CarMove : MonoBehaviour
                 startAngle -= thetaAngle;
                 start -= change;
             }
-            //Debug.DrawRay(transform.position, transform.up, Color.red);
 
-            // If it hits something...
-            //if (hit.collider != null)
-            //{
-            //    Debug.DrawLine(transform.position, hit.point, Color.white);
-            //}
+            //Debug.DrawRay(transform.position, transform.up, Color.red);
 
             //w = Input.GetKey(KeyCode.W) ? true : false;
             //s = Input.GetKey(KeyCode.S) ? true : false;
@@ -225,14 +228,18 @@ public class CarMove : MonoBehaviour
         handleDeath();        
     }
 
+    // increase fitness if hitting checkpoints
     void CheckpointHit()
     {
         print("Hit Checkpoint");
         fitness += 15;
     }
 
+    // produce training data
     public void SaveOutput()
     {
+        // create a format and assign inputs into it
+        // slightly unnessisary but a little cleaner
         DataFormat format = new DataFormat();
         format.Speed = speed;
         format.Angle = angle;
@@ -250,12 +257,12 @@ public class CarMove : MonoBehaviour
         format.A = a;
         format.D = d;
 
+        // format the data into a string for the CSV file
         string formatted = $"{format.Speed};{format.Angle};{format.Steering};{format.Acceleration};{format.Sensor1};{format.Sensor2};{format.Sensor3};{format.Sensor4};{format.Sensor5};{format.Sensor6};{format.W};{format.A};{format.S};{format.D}";
 
-
+        // write the line into the file
         string docPath = "C:/Users/alext/PycharmProjects/neuralTesting";
 
-        //Write the string array to a new file named "WriteLines.txt".
         using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "TrainingData5.csv"), true))
         {
             outputFile.WriteLine(formatted);
@@ -263,6 +270,7 @@ public class CarMove : MonoBehaviour
 
     }
 
+    // get the current input data formatted nicely
     public string OutputData()
     {
         DataFormat format = new DataFormat();
@@ -296,6 +304,7 @@ public class CarMove : MonoBehaviour
         //}
     }
 
+    // retrieves the output from the server and activates the relevent input(s)
     public void handleMessage(string msg)
     {
         //w;a;s;d

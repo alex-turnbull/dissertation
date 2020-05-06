@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// controls and handles the agents and calling of script
+/// </summary>
 public class Manager : MonoBehaviour
 {
     public int popSize;
@@ -17,16 +20,17 @@ public class Manager : MonoBehaviour
     void Start()
     {
         print("Generating Cars");
+        // activate the required number of cars and assign ports
         for (int i = 0; i < popSize; i++)
         {
             GameObject spawnedCar = car.transform.GetChild(i).gameObject;
-            //GameObject spawnedCar = Instantiate(car, spawn.transform.position, Quaternion.identity);7
             spawnedCar.SetActive(true);
             spawnedCar.GetComponent<CarMove>().port = port.ToString();
             port += 1;
             activeCars.Add(spawnedCar.GetComponent<CarMove>());
         }
 
+        // call the command line to run the Python
         if (callScript)
         {
             string strCmdText;
@@ -43,12 +47,14 @@ public class Manager : MonoBehaviour
 
     void ReactivateCars()
     {
+        // tell the car it's ready to respawn
         for (int i = 0; i < activeCars.Count; i++)
         {
             activeCars[i].flaggedToRespawn = true;
         }
     }
 
+    // recieve messages from event server and handle as such
     public void handleMessage(string msg)
     {
         print(msg);
