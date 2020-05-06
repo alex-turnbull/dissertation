@@ -1,6 +1,6 @@
 """
 
-
+'server' implementation to handle data for a player between Unity and here
 
 """
 
@@ -28,15 +28,18 @@ class CarServer:
 
         self.currentScore = 0
 
+        # run on its own thread
         thread = threading.Thread(target=self.run, args=())
         thread.daemon = True
         thread.start()
 
     def run(self):
         while True:
+            # receives the input from the unity client
             message = self.socket.recv()
             print("Received request: %s" % message, "On port:", self.port)
 
+            # formats the message through string manipulation
             msgFormat = str(message)
             msgFormat = msgFormat[2:]
             msgFormat = msgFormat[:-1]
@@ -47,16 +50,18 @@ class CarServer:
             self.mostRecentLookData = [msgFormat[1], msgFormat[2], msgFormat[3], msgFormat[4], msgFormat[5], msgFormat[6],
                              msgFormat[7], msgFormat[8], msgFormat[9], msgFormat[10]]
 
+            # handle death
             if msgFormat[11] == "False":
                 self.dead = True
             else:
                 self.dead = False
 
+            # retrieve fitness
             self.currentScore = float(msgFormat[12])
 
-            # print("server on port", self.port, "RUNNING")
             self.outputString = ""
 
+            # output the data produced by the NEAT system
             for item in self.mostRecentOutData:
                 self.outputString = self.outputString + str(item) + ";"
 
@@ -70,6 +75,7 @@ class CarServer:
             # print("Sending Output: %s" % self.outputString)
             self.socket.send(self.outputMsg)
 
+    # function player calls to get latest data
     def getData(self):
         return self.mostRecentLookData
 
