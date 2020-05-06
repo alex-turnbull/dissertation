@@ -1,6 +1,6 @@
 """
 
-
+Handles the population of agents undergoing the NEAT process
 
 """
 
@@ -31,8 +31,9 @@ class Population:
     serverList = []
 
     def __init__(self, size):
-        self.server = servers.EventServer(self.serverPort)
+        self.server = servers.EventServer(self.serverPort)  # create event server
         for i in range(0, size):
+            # create given number of players and servers
             self.pop.append(Player.Player())
             port = str(globals.currentPort)
             globals.currentPort += 1
@@ -41,16 +42,15 @@ class Population:
             self.pop[i].brain.generateNetwork()
             self.pop[i].brain.mutate(self.innovationHistory)
 
+    # perform the update loop for those still alive
     def updateAlive(self):
         for i in range(0,len(self.pop)):
             if not self.pop[i].dead:
                 self.pop[i].look()
                 self.pop[i].think()
                 self.pop[i].update()
-                if not globals.showNothing and (not globals.showBest or i == 0):
-                    self.pop[i].show()
 
-
+    # checks if entire population is dead / ready for evolution
     def done(self):
         for i in range(0, len(self.pop)):
             if not self.pop[i].dead:
@@ -58,6 +58,7 @@ class Population:
 
         return True
 
+    # sets the best player in the population for reference
     def setBestPlayer(self):
         tempBest = self.species[0].players[0]
         tempBest.gen = self.gen
@@ -69,18 +70,19 @@ class Population:
             self.bestScore = tempBest.score
             self.bestPlayer = tempBest.cloneForReplay()
 
+    # Handle the population and produces a new generation
     def naturalSelection(self):
-        self.calculateFitness()
-        self.speciate()
-        self.sortSpecies()
+        self.calculateFitness()  # calculate fitness for all
+        self.speciate()  # separate population into species
+        self.sortSpecies()  # sort species into fitness rank order
         if self.massExtinctionEvent:
             self.massExtinction()
             self.massExtinctionEvent = False
 
-        self.cullSpecies()
+        self.cullSpecies()  # remove bottom half of species
         self.setBestPlayer()
-        self.killStaleSpecies()
-        self.killBadSpecies()
+        self.killStaleSpecies()  # remove species not improving
+        self.killBadSpecies()  # remove bad species
 
         print("Generation", self.gen, "Number of mutations", len(self.innovationHistory), "Species " + str(len(self.species)), "<<<<<<<<<<<<<<<<<<<<<<<<<<")
 
@@ -94,7 +96,8 @@ class Population:
             print(" ")
             # children.append(self.species[j].champ.cloneForReplay())
 
-            NoOfChildren = math.floor(self.species[j].averageFitness/averageSum * len(self.pop))
+            # calculate the number of children required
+            NoOfChildren = math.floor(self.species[j].averageFitness/averageSum * len(self.pop)) - 1
             for i in range(0, NoOfChildren):
                 children.append(self.species[j].produceChild(self.innovationHistory))
 
@@ -114,6 +117,7 @@ class Population:
         self.server.getData()
         self.server.sendData("respawn")
 
+    # separate population into species
     def speciate(self):
         for s in self.species:
             s.players.clear()
@@ -129,11 +133,12 @@ class Population:
             if not speciesFound:
                 self.species.append(Species.Species(self.pop[i]))
 
+    # calculate fitness of all players
     def calculateFitness(self):
         for i in range(0, len(self.pop)):
             self.pop[i].calculateFitness()
 
-
+    # sort species by fitness
     def sortSpecies(self):
         for s in self.species:
             s.sortSpecies()
@@ -156,6 +161,7 @@ class Population:
 
         self.species = temp
 
+    # remove species not improving
     def killStaleSpecies(self):
         i = 2 - 1
         while i+1 <= len(self.species):
@@ -164,6 +170,7 @@ class Population:
                 self.species.remove(i)
                 i -= 1
 
+    # remove bad species
     def killBadSpecies(self):
         averageSum = self.getAvgFitnessSum()
 

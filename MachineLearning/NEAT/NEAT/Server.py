@@ -65,8 +65,6 @@ class CarServer:
             self.outputString = bytes(self.outputString, 'utf-8')
 
             #  Send reply back to client
-            #  In the real world usage, after you finish your work, send your output here
-
             self.outputMsg = b"" + self.outputString
 
             # print("Sending Output: %s" % self.outputString)

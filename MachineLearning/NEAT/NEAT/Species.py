@@ -1,6 +1,6 @@
 """
 
-
+players are grouped into species based on similar brains
 
 """
 
@@ -15,6 +15,7 @@ class Species:
     staleness = 0
     rep = None
 
+    # compatibility testing coefficients
     excessCoeff = 1
     weightDiffCoeff = 0.5
     combatbilityThreshold = 3
@@ -26,6 +27,7 @@ class Species:
         self.rep = p.brain.clone()
         self.champ = p.cloneForReplay()
 
+    # returns whether the parameter genome is in this species
     def sameSpecies(self, g):
         excessAndDisjoint = self.getExcessDisjoint(g, self.rep)
         averageWeightDiff = self.averageWeightDiff(g, self.rep)
@@ -37,9 +39,11 @@ class Species:
         compatibility = (self.excessCoeff * excessAndDisjoint/largeGenomeNormaliser) + (self.weightDiffCoeff * averageWeightDiff)
         return self.combatbilityThreshold > compatibility
 
+    # add a player to this group of species
     def addToSpecies(self, p):
         self.players.append(p)
 
+    # returns the number of genes that don't match
     def getExcessDisjoint(self, brain1, brain2):
         matching = 0
         for i in range(0, len(brain1.genes)):
@@ -50,6 +54,7 @@ class Species:
 
         return len(brain1.genes) + len(brain2.genes) - 2*matching
 
+    # returns the average weight difference between matching genes in the input genomes
     def averageWeightDiff(self, brain1, brain2):
         if len(brain1.genes) == 0 or len(brain2.genes) == 0:
             return 0
@@ -68,6 +73,7 @@ class Species:
 
         return totalDiff/matching
 
+    # organises players in species internally based on fitness
     def sortSpecies(self):
         temp = []
 
@@ -104,6 +110,7 @@ class Species:
 
         self.averageFitness = sum/len(self.players)
 
+    # produce a child from players in this species
     def produceChild(self, innovationHistory):
         if random.uniform(0, 1) < 0.25:
             child = self.selectPlayer().clone()
@@ -119,6 +126,7 @@ class Species:
         child.brain.mutate(innovationHistory)
         return child
 
+    # selects a player bases on its fitness
     def selectPlayer(self):
         fitnessSum = 0
         for i in range(0,len(self.players)):
@@ -134,6 +142,7 @@ class Species:
 
         return self.players[0]
 
+    # kill bottom half of species
     def cull(self):
         if len(self.players) > 2:
             i = int((len(self.players)/2) - 1)

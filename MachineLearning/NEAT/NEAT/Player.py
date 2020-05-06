@@ -1,6 +1,6 @@
 """
 
-
+the definition for an agent in NEAT
 
 """
 
@@ -16,8 +16,8 @@ class Player:
     fitness = None
     brain = None
 
-    genomeInputs = 10
-    genomeOutputs = 4
+    genomeInputs = 10  # number of sensors
+    genomeOutputs = 4  # number of buttons to press
 
     vision = [0] * genomeInputs  # ALL inputs from Unity
     decision = [0] * genomeOutputs  # Output buttons
@@ -38,21 +38,21 @@ class Player:
         self.id = "g" + str(self.gen) + ":n" + str(Globals.count)
         Globals.count += 1
 
-    def show(self):
-        pass
-
     def move(self):
         # Control/ communication with Unity
         pass
 
+    # performs the look - think - update every tick
     def update(self):
         if self.server.dead:
             self.dead = True
 
+    # retrieve latest vision data from the server
     def look(self):
         data = self.server.getData()
         self.vision = data
 
+    # makes the prediction based on inputs and sends the output
     def think(self):
         max = 0
         maxIndex = 0
@@ -65,7 +65,7 @@ class Player:
 
         self.server.mostRecentOutData = decision
 
-
+    # return a copy of this player
     def clone(self):
         clone = Player()
         clone.brain = self.brain.clone()
@@ -85,10 +85,10 @@ class Player:
 
         return clone
 
+    # calculate fitness
     def calculateFitness(self):
         self.score = self.server.getFinalScore()
         self.fitness = self.score * self.score
-        del self.server
         return self.fitness
 
     def crossover(self, parent2):
