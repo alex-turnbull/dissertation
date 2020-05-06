@@ -1,10 +1,16 @@
+"""
+
+Represents a neuron in the brain
+
+"""
+
 import math
 
 
 class Node:
     number = None
-    inputSum = 0
-    outputValue = 0
+    inputSum = 0  # current sum before activation
+    outputValue = 0  # after activation function is applied
     outputConnections = []
     layer = 0
 
@@ -15,6 +21,7 @@ class Node:
         y = 1 / (1 + pow(math.e, -4.9*x))
         return y
 
+    # function to send its output value into the inputs of connected nodes
     def engage(self):
         if self.layer != 0:
             self.outputValue = self.sigmoid(self.inputSum)

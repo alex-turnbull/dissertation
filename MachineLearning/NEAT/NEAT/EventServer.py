@@ -26,6 +26,7 @@ class EventServer:
         self.outputString = ""
         self.outputMsg = None
 
+        # puts the server on a seperate thread
         thread = threading.Thread(target=self.run, args=())
         thread.daemon = True
         thread.start()
@@ -34,11 +35,13 @@ class EventServer:
         print("server on port", self.port, "RUNNING")
         pass
 
+    # when required, get data from client, always empty/none
     def getData(self):
         message = self.socket.recv()
 
         return None
 
+    # send the data when the Python wants to call an event to the Unity client
     def sendData(self, outData):
         self.outputString = ""
 

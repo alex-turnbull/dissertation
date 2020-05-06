@@ -1,3 +1,9 @@
+"""
+
+
+
+"""
+
 import random
 
 
@@ -80,7 +86,6 @@ class Species:
 
         self.players = temp
         if len(self.players) == 0:
-            print("Fucking")
             self.staleness = 200
             return
 

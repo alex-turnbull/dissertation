@@ -1,5 +1,7 @@
 """
 
+Genome implementation for NEAT, (individuals in the population)
+
 """
 
 import math
@@ -30,11 +32,13 @@ class Genome:
         self.outputs = out
 
         if crossover is None:
+            # create input nodes
             for i in range(0, self.inputs):
                 self.nodes.append(Node.Node(i))
                 self.nextNode += 1
                 self.nodes[i].layer = 0
 
+            # create output nodes
             for i in range(0, self.outputs):
                 self.nodes.append(Node.Node(i+self.inputs))
                 self.nodes[i+self.inputs].layer = 1
@@ -45,6 +49,7 @@ class Genome:
             self.nextNode += 1
             self.nodes[self.biasnode].layer = 0
 
+    # returns a node with the respective matching number
     def getNode(self, nodeNumber):
         for i in range(0, len(self.nodes)):
             if self.nodes[i].number == nodeNumber:
@@ -52,6 +57,7 @@ class Genome:
 
         return None
 
+    # adds connections going out of a node connecting it to the required nodes for feeding forward
     def connectNodes(self):
         for i in range(0, len(self.nodes)):
             self.nodes[i].outputConnections.clear()
@@ -59,6 +65,7 @@ class Genome:
         for i in range(0, len(self.genes)):
             self.genes[i].fromNode.outputConnections.append(self.genes[i])
 
+    # feeding in input values into the network and returning the output array
     def feedForward(self, inputValues):
         for i in range(0, self.inputs):
             self.nodes[i].outputValue = inputValues[i]
@@ -77,6 +84,7 @@ class Genome:
 
         return outs
 
+    # generate the network as a list of nodes in order
     def generateNetwork(self):
         self.connectNodes()
         self.network = []
@@ -86,6 +94,8 @@ class Genome:
                 if self.nodes[x].layer == i:
                     self.network.append(self.nodes[x])
 
+    # mutate the network by adding a new node
+    # it does this by picking a random connection and disabling it then 2 new connections are added
     def addNode(self, innovationHistory):
         if len(self.genes) == 0:
             self.addConnection(innovationHistory)
@@ -123,10 +133,10 @@ class Genome:
 
         self.connectNodes()
 
-
+    # adds a connection between 2 nodes which aren't currently connected
     def addConnection(self, innovationHistory):
         if self.fullyConnected():
-            print("connetion failed lmao")
+            print("Connection Failed")
             return
 
         randomNode1 = math.floor(random.uniform(0, len(self.nodes)))
@@ -145,6 +155,7 @@ class Genome:
         self.genes.append(connectionGene.ConnectionGene(self.nodes[randomNode1], self.nodes[randomNode2], random.uniform(-1, 1), connectionInnovationNumber))
         self.connectNodes()
 
+    # checks if the random connection is valid, if not keep modifying and checking until valid
     def randomConnectionNodesHandler(self, r1, r2):
         if self.nodes[r1].layer == self.nodes[r2].layer:
             return True
@@ -153,6 +164,9 @@ class Genome:
 
         return False
 
+    # returns the innovation number for the new mutation
+    # if this mutation has never been seen before then it will be given a new unique innovation number otherwise
+    # same as the previous one
     def getInnovationNumber(self, innovationHistory, nodeFrom, nodeTo):
         isNew = True
         connectionInnovationNumber = globals.nextConnectionNo
@@ -173,6 +187,7 @@ class Genome:
 
         return connectionInnovationNumber
 
+    # returns whether the network is fully connected
     def fullyConnected(self):
         maxConnections = 0
         nodesInLayers = [0] * self.layers
@@ -191,6 +206,7 @@ class Genome:
             return True
         return False
 
+    # mutates genome
     def mutate(self, innovationHistory):
         if len(self.genes) == 0:
             self.addConnection(innovationHistory)
@@ -208,6 +224,7 @@ class Genome:
         if rand3 < 0.02:
             self.addNode(innovationHistory)
 
+    # called when this Genome is better that the other parent
     def crossover(self, parent2):
         child = Genome(self.inputs, self.outputs, True)
         child.genes.clear()
